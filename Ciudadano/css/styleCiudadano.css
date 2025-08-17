@@ -1,0 +1,163 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: white;
+}
+
+.header{
+    background-color: green;
+    margin-top: 0px;
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header>img{
+    width: 70px;
+}
+
+.header_title a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.8em;
+    margin-left: 20px;
+}
+
+.header_title a:hover{
+    color: grey;
+}
+
+.head-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+.head-nav > li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.head-nav__item button {
+    background-color: white;
+    color: green;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.head-nav__item a {
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            padding: 5px;
+}
+
+.head-nav__item a:hover {
+    color: black;
+}
+
+.head-nav__item a:active{
+    color: grey;
+}
+
+
+main {
+  padding: 40px 5%;
+  background-color: white;
+  max-width: 900px;
+  margin: 40px auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.perfil-usuario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.usuario-info {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.foto-perfil {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.usuario-info label {
+  font-weight: bold;
+}
+
+.usuario-info input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.comentarios {
+  flex: 1 1 300px;
+}
+
+.comentarios ul,
+.favoritos ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.comentarios li a,
+.favoritos li a {
+  text-decoration: none;
+  color: black;
+}
+
+.comentarios li a:visited,
+.favoritos li a:visited {
+  color: darkgreen;
+}
+
+.comentarios li a:hover,
+.favoritos li a:hover {
+  color: green;
+  text-decoration: underline;
+}
+
+.favoritos {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.favoritos div {
+  flex: 1;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkgreen;
+}

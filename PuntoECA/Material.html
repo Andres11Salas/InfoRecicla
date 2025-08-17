@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Materiales | InfoRecicla</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="css/styleGestionInventario.css">
+</head>
+<body>
+  <header class="header">
+    <img src="../images/logo.png" alt="logo InfoRecicla">
+    <h5 class="header_title"><a href="../Inicio/index.html">InfoRecicla | Recicladora y Chatarrería JJ</a></h3>
+    <nav>
+      <ul class="head-nav">
+                <li class="head-nav__item"><a class="btn btn-outline-light" href="../Inicio/index.html">Salir</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="nav nav-pills justify-content-center my-3">
+    <a class="nav-link" href="PerfilECA.html">Perfil</a>
+    <a class="nav-link" href="GestionInventario.html">Gestión de Inventario</a>
+    <a class="nav-link active" aria-current="page" href="Material.html">Registro de Materiales</a>
+    <a class="nav-link" href="Historial.html">Historial de Inventario</a>
+    <a class="nav-link" href="Proveedores.html">Proveedores</a>
+    <a class="nav-link" href="Conversaciones.html">Conversaciones</a>
+  </nav>
+
+  <main class="container my-4">
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">Añadir Nuevo Material</div>
+      <div class="card-body">
+        <form id="formMaterial" class="needs-validation" novalidate>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="matNombre" class="form-label">Material</label>
+              <input type="text" class="form-control" id="matNombre" required>
+              <div class="invalid-feedback">Obligatorio.</div>
+            </div>
+            <div class="col-md-2">
+              <label for="matStock" class="form-label">Stock (kg)</label>
+              <input type="number" class="form-control" id="matStock" min="0" step="0.01" required>
+              <div class="invalid-feedback">Ingresa un número válido mayor o igual a 0.</div>
+            </div>
+            <div class="col-md-3">
+              <label for="matCapMax" class="form-label">Cap. Máx. (kg)</label>
+              <input type="number" class="form-control" id="matCapMax" min="1" step="0.01" required>
+              <div class="invalid-feedback">Ingresa un número válido mayor o igual a 1.</div>
+            </div>
+            <div class="col-md-2">
+              <label for="matPrecio" class="form-label">Precio ($/kg)</label>
+              <input type="number" class="form-control" id="matPrecio" min="0" step="0.01" required>
+              <div class="invalid-feedback">Ingresa un valor de precio válido.</div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-success w-100">Registrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:11">
+      <div id="toastNotificacion" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">Material registrado correctamente.</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="contenedorTabla" class="table-responsive">
+      <table id="tablaMateriales" class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Stock (kg)</th>
+            <th>Cap. Disponible</th>
+            <th>Cap. Máx. (kg)</th>
+            <th>Precio ($/kg)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Papel y cartón</td>
+            <td>120</td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width:60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+              </div>
+            </td>
+            <td>200</td>
+            <td>600</td>
+          </tr>
+          <tr>
+            <td>Plástico</td>
+            <td>85</td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width:57%;" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100">57%</div>
+              </div>
+            </td>
+            <td>150</td>
+            <td>1500</td>
+          </tr>
+          <tr>
+            <td>Vidrio</td>
+            <td>210</td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width:70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70%</div>
+              </div>
+            </td>
+            <td>300</td>
+            <td>800</td>
+          </tr>
+          <tr>
+            <td>Metales</td>
+            <td>27</td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width:54%;" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100">54%</div>
+              </div>
+            </td>
+            <td>50</td>
+            <td>2500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+  <script src="JS/registroMaterial.js"></script>
+
+  
+</body>
+</html>
+>

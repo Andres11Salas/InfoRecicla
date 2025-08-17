@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil ECA | InfoRecicla</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/stylePerfilECA.css">
+</head>
+<body>
+  <header class="header">
+    <img src="../images/logo.png" alt="logo InfoRecicla">
+    <h5 class="header_title"><a href="../Inicio/index.html">InfoRecicla | Recicladora y Chatarrería JJ</a></h3>
+    <nav>
+      <ul class="head-nav">
+        <li class="head-nav__item"><a class="btn btn-outline-light" href="../Inicio/index.html">Salir</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <nav class="nav nav-pills justify-content-center my-3">
+    <a class="nav-link active" aria-current="page" href="PerfilECA.html">Perfil</a>
+    <a class="nav-link" href="GestionInventario.html">Gestión de Inventario</a>
+    <a class="nav-link" href="Material.html">Registro de Materiales</a>
+    <a class="nav-link" href="Historial.html">Historial de Inventario</a>
+    <a class="nav-link" href="Proveedores.html">Proveedores</a>
+    <a class="nav-link" href="Conversaciones.html">Conversaciones</a>
+  </nav>
+
+  <main class="container my-4">
+    <h2 class="text-center mb-4">Información del Perfil</h2>
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Foto de Perfil</h5>
+            <div class="text-center mb-3">
+              <img id="previewPerfil" src="../images/perfil_default.png"
+                   alt="Foto de perfil" class="rounded-circle img-thumbnail" style="width:120px; height:120px; object-fit:cover;">
+            </div>
+            <div class="mb-3">
+              <label for="fotoPerfil" class="form-label">Subir nueva foto</label>
+              <input class="form-control" type="file" id="fotoPerfil" accept="image/*">
+            </div>
+            <hr>
+            <h5 class="card-title">Datos del Encargado</h5>
+            <form>
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del encargado</label>
+                <input type="text" class="form-control" id="nombre" value="María Pérez">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" value="contacto@jjreciclaje.com">
+              </div>
+              <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono de contacto</label>
+                <input type="tel" class="form-control" id="telefono" value="6016334455">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Foto del Punto ECA</h5>
+            <div class="text-center mb-3">
+              <img id="previewPunto" src="../images/eca-default.png"
+                   alt="Foto del punto ECA" class="img-fluid rounded img-thumbnail" style="max-height:160px; object-fit:cover;">
+            </div>
+            <div class="mb-3">
+              <label for="fotoPunto" class="form-label">Subir foto del punto</label>
+              <input class="form-control" type="file" id="fotoPunto" accept="image/*">
+            </div>
+            <hr>
+            <h5 class="card-title">Datos del Punto ECA</h5>
+            <form>
+              <div class="mb-3">
+                <label for="nombrePunto" class="form-label">Nombre del Punto</label>
+                <input type="text" class="form-control" id="nombrePunto" value="Recicladora y Chatarrería JJ">
+              </div>
+              <div class="mb-3">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="direccion" value="Cra 7 #109-06 Sur">
+              </div>
+              <div class="mb-3">
+                <label for="ubicacion" class="form-label">Localidad</label>
+                <input type="text" class="form-control" id="ubicacion" value="Usme">
+              </div>
+                <div class="mb-3">
+                  <label for="latlong" class="form-label">Coordenadas</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="latlong" placeholder="Latitud, Longitud" readonly>
+                      <button class="btn btn-outline-secondary" type="button" id="btnUbicacion">
+                      <i class="bi bi-geo-alt-fill"></i> Obtener ubicación
+                    </button>
+                    </div>
+                  </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <button class="btn btn-success btn-lg">Guardar Cambios</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="JS/geolocalisacion.js"></script>
+</body>
+</html>

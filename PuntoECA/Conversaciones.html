@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversaciones | InfoRecicla</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styleConversaciones.css">
+ 
+</head>
+<body>
+  <header class="header">
+    <img src="../images/logo.png" alt="logo InfoRecicla">
+    <h5 class="header_title"><a href="../Inicio/index.html">InfoRecicla | Recicladora y Chatarrería JJ</a></h3>
+    <nav>
+      <ul class="head-nav">
+                <li class="head-nav__item"><a class="btn btn-outline-light" href="../Inicio/index.html">Salir</a></li>
+      </ul>
+    </nav>
+  </header>
+  <nav class="nav nav-pills justify-content-center my-3">
+    <a class="nav-link" href="PerfilECA.html">Perfil</a>
+    <a class="nav-link" href="GestionInventario.html">Gestión de Inventario</a>
+    <a class="nav-link" href="Material.html">Registro de Materiales</a>
+    <a class="nav-link" href="Historial.html">Historial de Inventario</a>
+    <a class="nav-link" href="Proveedores.html">Proveedores</a>
+    <a class="nav-link active" href="Conversaciones.html">Conversaciones</a>
+  </nav>
+  <main class="container my-4">
+    <h2 class="mb-4">Conversaciones con Ciudadanos</h2>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="sidebar">
+          <div class="thread active" data-thread="1">
+            <strong>Ciudadano A</strong><br>
+            <small>¿Dónde está el punto más cercano?</small>
+          </div>
+          <div class="thread" data-thread="2">
+            <strong>Ciudadano B</strong><br>
+            <small>¿Aceptan plástico hoy?</small>
+          </div>
+          <div class="thread" data-thread="3">
+            <strong>Ciudadano C</strong><br>
+            <small>Horario de atención</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 d-flex flex-column">
+        <div class="chat-window mb-3" id="chatWindow">
+          <div class="message message--user">
+            <div>¿Dónde está el punto de reciclaje más cercano?</div>
+            <div class="timestamp">2025-06-10 09:00</div>
+          </div>
+          <div class="message message--eca">
+            <div>Estamos en la Calle 5 #123. Abierto de 8:00 a 17:00.</div>
+            <div class="timestamp">2025-06-10 09:05</div>
+          </div>
+        </div>
+        <div>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje">
+            <button class="btn btn-success" type="button">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="JS/conversacion.js"></script>
+</body>
+</html>
