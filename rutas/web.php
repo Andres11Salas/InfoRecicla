@@ -32,4 +32,3 @@ Ruta::getRutas('/publicaciones/:id', function ($id) {
     echo "Ruta de publicación específica: $id";
 });
 Ruta::dispatch();
-"Se agregaron enrutadores de la pagina de inicio con las distintas vistas accesibles desde este"
