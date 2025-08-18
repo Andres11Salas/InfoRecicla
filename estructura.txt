@@ -1,0 +1,106 @@
+.
+├── app
+│   ├── Controllers
+│   │   └── InicioController.php
+│   └── Models
+├── estructura.txt
+├── libreria
+│   └── Ruta.php
+├── public
+│   ├── 404.html
+│   ├── .htaccess
+│   └── index.php
+├── resource
+│   └── views
+│       ├── Admin
+│       │   ├── admin.html
+│       │   └── css
+│       │       └── styleAdmin.css
+│       ├── Ciudadano
+│       │   ├── ciudadano.html
+│       │   └── css
+│       │       └── styleCiudadano.css
+│       ├── images
+│       │   ├── eca-default.png
+│       │   ├── fotomapa.png
+│       │   ├── inventario.png
+│       │   ├── logo.png
+│       │   ├── mapaECA.png
+│       │   ├── mapa.png
+│       │   ├── noticia1.png
+│       │   ├── noticia2.png
+│       │   ├── ParejaReciclando.png
+│       │   ├── perfil_default.png
+│       │   └── publicaciones.png
+│       ├── Inicio
+│       │   ├── CSS
+│       │   │   └── style.css
+│       │   └── index.html
+│       ├── Mapa
+│       │   └── mapa.html
+│       ├── Publicaciones
+│       │   └── publicaciones
+│       │       ├── css
+│       │       │   └── publicaciones.css
+│       │       ├── favoritos
+│       │       │   ├── css
+│       │       │   │   └── favoritos.css
+│       │       │   ├── favoritos.html
+│       │       │   └── imagenes
+│       │       │       └── logo.png
+│       │       ├── imagenes
+│       │       │   ├── festival.jpeg
+│       │       │   └── logo.png
+│       │       ├── likes
+│       │       │   ├── css
+│       │       │   │   └── likes.css
+│       │       │   ├── imagenes
+│       │       │   │   └── logo.png
+│       │       │   └── likes.html
+│       │       └── publicaciones.html
+│       ├── PuntoECA
+│       │   ├── Conversaciones.html
+│       │   ├── css
+│       │   │   ├── styleConversaciones.css
+│       │   │   ├── styleGestionInventario.css
+│       │   │   ├── styleHistorial.css
+│       │   │   ├── styleMaterial.css
+│       │   │   ├── stylePerfilECA.css
+│       │   │   └── styleProveedores.css
+│       │   ├── GestionInventario.html
+│       │   ├── Historial.html
+│       │   ├── JS
+│       │   │   ├── conversacion.js
+│       │   │   ├── geolocalisacion.js
+│       │   │   ├── historialInventario.js
+│       │   │   ├── registroMaterial.js
+│       │   │   └── tablasGesionInventario.js
+│       │   ├── Material.html
+│       │   ├── PerfilECA.html
+│       │   └── Proveedores.html
+│       └── Registro
+│           ├── admin.html
+│           ├── ciudadano.html
+│           ├── css
+│           │   ├── admin.css
+│           │   ├── autenticacion.css
+│           │   ├── ciudadano.css
+│           │   ├── gestor.css
+│           │   ├── styleInicioSesion.css
+│           │   └── styleRegistro.css
+│           ├── gestor.html
+│           ├── imagen
+│           │   ├── logo.png
+│           │   ├── MAPACHE.png
+│           │   └── paisaje.jfif
+│           ├── inicioSesion.html
+│           ├── js
+│           │   ├── login.js
+│           │   ├── puntoECA.js
+│           │   └── registro.js
+│           ├── puntoECA.html
+│           └── registro.html
+└── rutas
+    └── web.php
+
+34 directories, 70 files

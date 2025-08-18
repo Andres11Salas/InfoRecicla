@@ -54,8 +54,21 @@ class Ruta
             if (preg_match("#^$ruta$#", $uri, $matches)) {
                 //guardamos la o las coincidencias dentro de un array
                 $params = array_slice($matches, 1);
-                //Desglosamos el array en varia variables
-                $callback(...$params);
+
+                // Verificamos si el callback es una función callable
+                if (is_callable($callback)) {
+                    //Desglosamos el array en varias variables
+                    $response = $callback(...$params);
+                }
+                // Verificamos si el callback es un array
+                if (is_array($callback)) {
+                    //Asignamos a la posicion 0 el nombre de la clase
+                    $controller = new $callback[0]();
+                    //Asignamos a la posicion 1 el nombre del metodo 
+                    $response = $controller->{$callback[1]}(...$params);
+                }
+
+                echo $response; // Devolver la respuesta del controlador
 
                 return;
             }
