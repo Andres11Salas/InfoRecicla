@@ -2,132 +2,177 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/Inicio/styleInicio.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>InfoRecicla</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
+<body>
 
-<body class="body">
-    <header class="header">
-        <img src="imagenes/logo.png" alt="logo InfoRecicla">
-        <h3 class="header_title"><a href="/">InfoRecicla</a></h3>
-        <nav>
-            <ul class="head-nav">
-                <li class="head-nav__item"><a href="/login"><button>Iniciar Sesión</button></a>
-                </li>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="/imagenes/logo.png" alt="Logo InfoRecicla" width="90" height="90" class="rounded">
+                <span class="fs-1 fw-semibold">InfoRecicla</span>
+            </a>
+
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                <div class="nav-item dropdown">
+                    <a class="btn btn-light text-success fw-semibold px-3 dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                        aria-expanded="true">Acceder</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/login">Iniciar sesión</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/registro-ciudadano">Registrarse (Ciudadano)</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/registro-eca">Registrar Punto ECA</a></li>
+                    </ul>
+                </div>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <div class="container-fluid">
-        <main>
-            <section class="bienvenida">
-                <div class="row">
-                    <div class="col-md-5">
-                        <article>
-                            <h1 class="display-1 text-start">Bienvenido a InfoRecicla</h1>
-                            <p class="h4 text-start">Una plataforma para compartir informacion sobre reciclaje y ayuda
-                                para la gestion de Puntos ECA</p>
-                        </article>
-                    </div>
-                    <div class="col-md-7 text-center">
-                        <figure>
-                            <img src="imagenes/ParejaReciclando.png" class="img-fluid"
-                                alt="Personas separando elementos para reciclar">
-                        </figure>
-                    </div>
-                </div>
-            </section>
+    <main>
 
-            <section class="modulos">
-                <div class="row">
-                    <article class="Publicaciones col-md-6">
-                        <h2 class="h2 text-center">Publicaciones</h2>
-                        <a href="/publicaciones">
-                            <div class="row">
-                                <div class="col-3 col-sm-3 col-md-3 col-lg-3"></div>
-                                <div class="publicacion col-6 col-sm-6 col-md-6 col-lg-6 text-center">
-                                    <img src="imagenes/publicaciones.png" class="img-fluid" alt="">
-                                </div>
-                                <div class="col-3 col-sm-3 col-md-3 col-lg-3"></div>
-                            </div>
-                        </a>
-
-                        <div class="row">
-                            <div class="col"></div>
-                            <div class="col-md-4 text-center">
-                                <p class="fs-6">Aprende y descubre la actualidad del reciclaje con nosotros</p>
-                            </div>
-                            <div class="col"></div>
+        <!-- HERO -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <h1 class="display-5 fw-bold lh-sm">Bienvenido a InfoRecicla</h1>
+                        <p class="lead mt-3">
+                            Una plataforma para compartir información sobre reciclaje y apoyar la gestión de Puntos ECA.
+                        </p>
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="/publicaciones" class="btn btn-success btn-lg">Ver publicaciones</a>
+                            <a href="/mapa" class="btn btn-outline-success btn-lg">Mapa de Puntos ECA</a>
                         </div>
-                    </article>
-
-                    <article class="mapa col-md-6">
-                        <h2 class="h2 text-center">Mapa de Puntos ECA</h2>
-                        <a href="/mapa">
-                            <div class="row">
-                                <div class="col-3 col-sm-3 col-md-3 col-lg-3"></div>
-                                <div class="col-6 col-sm-6 col-md-6 col-lg-6 text-center">
-                                    <img src="imagenes/mapaECA.png" class="img-fluid" alt="">
-                                </div>
-                                <div class="col-3 col-sm-3 col-md-3 col-lg-3"></div>
-                            </div>
-                        </a>
-
-                        <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4 text-center">
-                                <p class="fs-6">Visualiza estaciones de reciclaje en Bogotá, filtra por proximidad y
-                                    consulta datos de contacto y capacidad de material</p>
-                            </div>
-                            <div class="col-md-4"></div>
-                        </div>
-                </div>
-                </article>
-    </div>
-    </section>
-    <div class="container">
-        <section>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
-                    <h1 class="h1 text-center">Gestión de Puntos ECA</h1>
-                </div>
-                <div class="col-md-2"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-5">
-                    <img src="imagenes/inventario.png" class="img-fluid" alt="">
-                </div>
-                <div class="col-md-3">
-                    <p class="fs-3 text-start">Registra tu punto. Lleva el control de tu inventario, permite que las
-                        personas te conozcan a la vez que mejoras tu gestion
-                    <div><a class="btn btn-outline-success" href="/registro" role="button">Registrate</a>
                     </div>
-                    </p>
+                    <div class="col-lg-6 text-center">
+                        <img src="/imagenes/ParejaReciclando.png" alt="Personas separando elementos para reciclar"
+                            class="img-fluid hero-img">
+                    </div>
                 </div>
-                <div class="col-md-2"></div>
             </div>
         </section>
-    </div>
+
+        <!-- MÓDULOS DESTACADOS -->
+        <section class="bg-success text-white py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Publicaciones -->
+                    <div class="col-md-6">
+                        <a href="/publicaciones" class="text-decoration-none text-white">
+                            <div class="card h-100 bg-transparent shadow-lg border-white">
+                                <div class="card-body text-center text-white">
+                                    <h2 class="h2 fw-semibold mb-3">Publicaciones</h2>
+                                    <img src="/imagenes/publicaciones.png" alt="Ilustración de publicaciones"
+                                        class="img-fluid mb-3" style="max-width:210px;">
+                                    <p class="mb-0">
+                                        Aprende y descubre la actualidad del reciclaje con nosotros.
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Mapa ECA -->
+                    <div class="col-md-6">
+                        <a href="/mapa" class="text-decoration-none text-white">
+                            <div class="card h-100 bg-transparent shadow-lg border-white">
+                                <div class="card-body text-center text-white">
+                                    <h2 class="h2 fw-semibold mb-3">Mapa de Puntos ECA</h2>
+                                    <img src="/imagenes/mapaECA.png" alt="Mapa de estaciones de reciclaje"
+                                        class="img-fluid mb-3" style="max-width:210px;">
+                                    <p class="mb-0">
+                                        Visualiza estaciones en Bogotá, filtra por proximidad y consulta contacto y
+                                        capacidad.
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-5 bg-light border-top">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Crea tu cuenta</h2>
+                    <p class="text-muted mb-0">Elige cómo quieres participar en InfoRecicla.</p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Registro Ciudadano -->
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-md">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-success me-2">Ciudadano</span>
+                                    <h3 class="h5 mb-0">Cuenta para Publicar y Comentar</h3>
+                                </div>
+                                <ul class="mb-4 small text-muted ps-3">
+                                    <li>Guarda publicaciones y comenta artículos.</li>
+                                    <li>Sigue temas y recibe notificaciones.</li>
+                                    <li>Participa con buenas prácticas de reciclaje.</li>
+                                </ul>
+                                <div class="mt-auto">
+                                    <a href="/registro" class="btn btn-outline-success w-100">Registrarme como
+                                        Ciudadano</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registro Punto ECA -->
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-md">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-success me-2">Punto ECA</span>
+                                    <h3 class="h5 mb-0">Registro de Estación y Gestión</h3>
+                                </div>
+                                <ul class="mb-4 small text-muted ps-3">
+                                    <li>Publica tu punto en el mapa con datos de contacto.</li>
+                                    <li>Controla inventario y capacidad de materiales.</li>
+                                    <li>Muestra disponibilidad actual a los ciudadanos.</li>
+                                </ul>
+                                <div class="mt-auto">
+                                    <a href="/registro" class="btn btn-outline-success w-100">Registrar Punto ECA</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-
-    <footer>
-        <nav>
-            <ul class="footer-nav">
-                <li>Acerca de</li>
-                <li>Soporte</li>
-                <li>Contacto</li>
+    <!-- FOOTER -->
+    <footer class="bg-light border-top py-4">
+        <div class="container">
+            <ul class="nav justify-content-center gap-3">
+                <li class="nav-item"><a class="nav-link text-muted" href="#">Acerca de</a></li>
+                <li class="nav-item"><a class="nav-link text-muted" href="#">Soporte</a></li>
+                <li class="nav-item"><a class="nav-link text-muted" href="#">Contacto</a></li>
             </ul>
-        </nav>
-
+            <p class="text-center text-muted mb-0 mt-2 small">&copy; <span id="year"></span> InfoRecicla</p>
+        </div>
     </footer>
-    </div>
+
+    <script>
+        // año dinámico en el footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

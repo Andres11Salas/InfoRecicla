@@ -6,6 +6,7 @@ require_once '../app/Controllers/PublicacionController.php';
 require_once '../app/Controllers/RegistroController.php';
 require_once '../app/Controllers/InicioSesionController.php';
 require_once '../app/Controllers/MapaController.php';
+require_once '../app/Controllers/CiudadanoController.php';
 
 use Libreria\Ruta;
 use App\Controllers\InicioController;
@@ -13,13 +14,20 @@ use App\Controllers\PublicacionController;
 use App\Controllers\RegistroController;
 use App\Controllers\InicioSesionController;
 use App\Controllers\MapaController;
+use App\Controllers\CiudadanoController;
 
 //Ruta valida - Clase controladora - metodo 
 Ruta::getRutas('/', [InicioController::class, 'view_inicio']);
 
 Ruta::getRutas('/registro', [RegistroController::class, 'view_registro']);
 
+Ruta::getRutas('/registro-ciudadano', [RegistroController::class, 'view_registro_ciudadano']);
+
+Ruta::getRutas('/registro-eca', [RegistroController::class, 'view_registro_eca']);
+
 Ruta::getRutas('/login', [InicioSesionController::class, 'view_InicioSesion']);
+
+Ruta::getRutas('/ciudadano', [CiudadanoController::class, 'view_ciudadano']);
 
 Ruta::getRutas('/mapa', [MapaController::class, 'view_mapa']);
 
