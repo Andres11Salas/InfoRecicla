@@ -22,10 +22,14 @@
 
             <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                 <div class="nav-item dropdown">
-                    <a class="btn btn-light text-success fw-semibold px-3 dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                        aria-expanded="true">Acceder</a>
+                    <a class="btn btn-light text-success fw-semibold px-3 dropdown-toggle" href="#"
+                        data-bs-toggle="dropdown" aria-expanded="true">Acceder</a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/login">Iniciar sesión</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                Iniciar sesión
+                            </a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -166,6 +170,44 @@
             <p class="text-center text-muted mb-0 mt-2 small">&copy; <span id="year"></span> InfoRecicla</p>
         </div>
     </footer>
+
+    <!-- MODAL: Iniciar Sesión -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de login -->
+                    <form id="loginForm" novalidate>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="ejemplo@correo.com"
+                                required>
+                            <div class="invalid-feedback">Ingresa un correo válido.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="••••••••"
+                                required>
+                            <div class="invalid-feedback">La contraseña es obligatoria.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Ingresar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <small class="text-muted">¿No tienes cuenta?</small>
+                    <a href="/registro" class="btn btn-outline-success btn-sm">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         // año dinámico en el footer
