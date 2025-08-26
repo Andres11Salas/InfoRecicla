@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- =========================================
+       HEAD: metadatos y estilos globales
+       ========================================= -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>InfoRecicla — Gestión Punto ECA (v2)</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ===== Estilos base del layout (solo CSS simple) ===== */
+        body {
+            background: #f8faf9;
+        }
+
+        .tab-card {
+            background: #fff;
+            border-radius: .75rem;
+            box-shadow: 0 .5rem 1.25rem rgba(0, 0, 0, .06);
+        }
+
+        .sticky-tabs {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background: #f8faf9;
+        }
+
+        .table thead th {
+            white-space: nowrap;
+        }
+
+        .sidebar-threads {
+            max-height: 64vh;
+            overflow: auto;
+        }
+
+        .chat-window {
+            height: 56vh;
+            overflow: auto;
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: .5rem;
+            padding: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: .5rem .75rem;
+            border-radius: .5rem;
+            margin-bottom: .5rem;
+        }
+
+        .message.user {
+            background: #e9f7ef;
+            align-self: flex-start;
+        }
+
+        .message.eca {
+            background: #e7f1ff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .progress-thin {
+            height: .65rem;
+        }
+
+        .badge-soft {
+            background: #19875414;
+            border: 1px solid #19875433;
+            color: #198754;
+        }
+
+        /* Calendario simple */
+        .calendar .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px
+        }
+
+        .calendar .day {
+            min-height: 94px;
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: .5rem;
+            padding: .5rem
+        }
+
+        .calendar .day.today {
+            outline: 2px solid #198754
+        }
+
+        .calendar .event {
+            display: block;
+            font-size: .75rem;
+            background: #e7f7ee;
+            border: 1px solid #cceedd;
+            border-radius: .25rem;
+            padding: .1rem .25rem;
+            margin: .15rem 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .material-thumb {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: .5rem
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================
+       NAVBAR
+       ========================================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="/imagenes/logo.png" alt="Logo InfoRecicla" width="48" height="48" class="rounded">
+                <span class="fs-4 fw-semibold">InfoRecicla — Gestor ECA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item"><a class="nav-link" href="/publicaciones">Publicaciones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mapa">Mapa ECA</a></li>
+                    <li class="nav-item"><a class="btn btn-light text-success fw-semibold" href="/">Salir</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =========================================
+       TABS NAV (sticky) — NUEVO: incluye Calendario
+       ========================================= -->
+    <div class="sticky-tabs border-bottom">
+        <div class="container">
+            <ul class="nav nav-tabs mt-3" id="ecaTabs" role="tablist">
+                <li class="nav-item" role="presentation"><button class="nav-link active" id="perfil-tab"
+                        data-bs-toggle="tab" data-bs-target="#perfil" type="button" role="tab">Perfil</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="inventario-tab"
+                        data-bs-toggle="tab" data-bs-target="#inventario" type="button" role="tab">Gestión de
+                        Inventario</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="materiales-tab"
+                        data-bs-toggle="tab" data-bs-target="#materiales" type="button" role="tab">Materiales</button>
+                </li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="historial-tab"
+                        data-bs-toggle="tab" data-bs-target="#historial" type="button" role="tab">Historial</button>
+                </li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="calendario-tab"
+                        data-bs-toggle="tab" data-bs-target="#calendario" type="button" role="tab">Calendario</button>
+                </li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="proveedores-tab"
+                        data-bs-toggle="tab" data-bs-target="#proveedores" type="button"
+                        role="tab">Centros/Proveedores</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" id="conversaciones-tab"
+                        data-bs-toggle="tab" data-bs-target="#conversaciones" type="button"
+                        role="tab">Conversaciones</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- =========================================
+       MAIN CONTENT
+       ========================================= -->
+    <main class="container my-4">
+        <div class="tab-content" id="ecaTabsContent">
+
+            <!-- ============ TAB: PERFIL ============ -->
+            <section class="tab-pane fade show active" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
+                <div class="row g-4">
+                    <!-- Encargado -->
+                    <div class="col-lg-6">
+                        <div class="tab-card p-4">
+                            <h5 class="mb-3">Encargado</h5>
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <img id="previewPerfil" src="../images/perfil_default.png" alt="Foto encargado"
+                                    class="rounded-circle img-thumbnail"
+                                    style="width:96px;height:96px;object-fit:cover;">
+                                <div>
+                                    <div class="small text-muted">Foto (opcional)</div><input
+                                        class="form-control form-control-sm" type="file" id="fotoPerfil"
+                                        accept="image/*">
+                                </div>
+                            </div>
+                            <form id="formEncargado" class="row g-3">
+                                <div class="col-md-6"><label class="form-label">Nombre</label><input type="text"
+                                        class="form-control" id="mgrNombre"></div>
+                                <div class="col-md-6"><label class="form-label">Teléfono</label><input type="tel"
+                                        class="form-control" id="mgrTelefono"></div>
+                                <div class="col-12"><label class="form-label">Correo</label><input type="email"
+                                        class="form-control" id="mgrEmail"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Punto ECA -->
+                    <div class="col-lg-6">
+                        <div class="tab-card p-4">
+                            <h5 class="mb-3">Punto ECA</h5>
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <img id="previewPunto" src="../images/eca-default.png" alt="Foto punto"
+                                    class="img-thumbnail rounded" style="width:140px;height:100px;object-fit:cover;">
+                                <div class="flex-grow-1">
+                                    <div class="small text-muted">Foto (opcional)</div><input
+                                        class="form-control form-control-sm" type="file" id="fotoPunto"
+                                        accept="image/*">
+                                </div>
+                            </div>
+                            <form id="formPunto" class="row g-3">
+                                <div class="col-12"><label class="form-label">Nombre del Punto</label><input type="text"
+                                        class="form-control" id="puntoNombre"></div>
+                                <div class="col-12"><label class="form-label">Dirección</label><input type="text"
+                                        class="form-control" id="puntoDireccion"></div>
+                                <div class="col-6"><label class="form-label">Ciudad</label><input type="text"
+                                        class="form-control" id="puntoCiudad"></div>
+                                <div class="col-6"><label class="form-label">Localidad</label><input type="text"
+                                        class="form-control" id="puntoLocalidad"></div>
+                                <div class="col-12"><label class="form-label">Coordenadas</label>
+                                    <div class="input-group"><input type="text" class="form-control" id="puntoLatLng"
+                                            placeholder="Latitud, Longitud" readonly>
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="btnUbicacion">Obtener ubicación</button>
+                                    </div>
+                                </div>
+                                <div class="col-12"><label class="form-label">Horario</label><input type="text"
+                                        class="form-control" id="puntoHorario" placeholder="Lun–Vie 8:00–17:00"></div>
+                            </form>
+                            <div class="text-end mt-3"><button class="btn btn-success" id="btnGuardarPerfil">Guardar
+                                    cambios</button></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: INVENTARIO ============ -->
+            <section class="tab-pane fade" id="inventario" role="tabpanel" aria-labelledby="inventario-tab">
+                <!-- Entrada rápida -->
+                <div class="tab-card p-4 mb-4">
+                    <h5 class="mb-3">Registrar Entrada de Material</h5>
+                    <form id="formEntrada" class="row g-3">
+                        <div class="col-md-4"><label class="form-label">Material</label><select id="entMaterial"
+                                class="form-select" required></select></div>
+                        <div class="col-md-2"><label class="form-label">Cantidad (kg)</label><input type="number"
+                                class="form-control" id="entStock" min="0" step="0.01" required></div>
+                        <div class="col-md-2"><label class="form-label">Precio ($/kg)</label><input type="number"
+                                class="form-control" id="entPrecio" min="0" step="0.01" required></div>
+                        <div class="col-md-2"><label class="form-label">Proveedor</label><select id="entProveedor"
+                                class="form-select"></select></div>
+                        <div class="col-md-2 d-flex align-items-end"><button type="submit"
+                                class="btn btn-success w-100">Agregar</button></div>
+                    </form>
+                </div>
+                <!-- Inventario actual -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Inventario Actual</h5>
+                    <button class="btn btn-outline-primary btn-sm" id="btnExportInventario">Exportar (futuro)</button>
+                </div>
+                <div class="tab-card p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0" id="tablaInventario">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Tipo/Categoría</th>
+                                    <th>Ocupación</th>
+                                    <th>Stock (kg)</th>
+                                    <th>Cap. Máx. (kg)</th>
+                                    <th>Umbral (kg)</th>
+                                    <th>Próximo despacho</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted" colspan="7">Cargando…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: MATERIALES (registro via MODAL) ============ -->
+            <section class="tab-pane fade" id="materiales" role="tabpanel" aria-labelledby="materiales-tab">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Materiales del Punto</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm" id="btnFiltrosMat">Filtros</button>
+                        <button class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modalMaterialNuevo">Nuevo material</button>
+                    </div>
+                </div>
+                <div class="tab-card p-3">
+                    <div class="row g-3" id="gridMateriales"><!-- JS: tarjetas de materiales --></div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: HISTORIAL ============ -->
+            <section class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="historial-tab">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab"
+                            data-bs-target="#hist-compras" type="button">Compras (Entradas)</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#hist-salidas"
+                            type="button">Salidas (Centros)</button></li>
+                </ul>
+                <div class="tab-content border border-top-0 rounded-bottom p-3">
+                    <div class="tab-pane fade show active" id="hist-compras">
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-3"><input id="hcDesde" type="date" class="form-control"></div>
+                            <div class="col-md-3"><input id="hcHasta" type="date" class="form-control"></div>
+                            <div class="col-md-3"><select id="hcMaterial" class="form-select">
+                                    <option value="">Todos los materiales</option>
+                                </select></div>
+                            <div class="col-md-3 d-grid"><button id="hcFiltrar"
+                                    class="btn btn-outline-success">Filtrar</button></div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Material</th>
+                                        <th>Kg</th>
+                                        <th>Proveedor</th>
+                                        <th>Precio/Kg</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hcTabla"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="hist-salidas">
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-3"><input id="hsDesde" type="date" class="form-control"></div>
+                            <div class="col-md-3"><input id="hsHasta" type="date" class="form-control"></div>
+                            <div class="col-md-3"><select id="hsMaterial" class="form-select">
+                                    <option value="">Todos los materiales</option>
+                                </select></div>
+                            <div class="col-md-3 d-grid"><button id="hsFiltrar"
+                                    class="btn btn-outline-success">Filtrar</button></div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Material</th>
+                                        <th>Kg</th>
+                                        <th>Centro de acopio</th>
+                                        <th>Precio/Kg</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hsTabla"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: CALENDARIO (despachos) ============ -->
+            <section class="tab-pane fade" id="calendario" role="tabpanel" aria-labelledby="calendario-tab">
+                <div class="row g-3">
+                    <div class="col-lg-8">
+                        <div class="tab-card p-3">
+                            <div class="calendar">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="h5 mb-0" id="calTitulo">—</div>
+                                    <div><button class="btn btn-sm btn-outline-secondary" id="calPrev">◀</button>
+                                        <button class="btn btn-sm btn-outline-secondary" id="calNext">▶</button>
+                                    </div>
+                                </div>
+                                <div class="grid text-center small text-muted mb-1">
+                                    <div>Lun</div>
+                                    <div>Mar</div>
+                                    <div>Mié</div>
+                                    <div>Jue</div>
+                                    <div>Vie</div>
+                                    <div>Sáb</div>
+                                    <div>Dom</div>
+                                </div>
+                                <div class="grid" id="calGrid"><!-- JS cells --></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="tab-card p-3">
+                            <h6>Programar nuevo despacho</h6>
+                            <div class="mb-2"><label class="form-label">Material</label><select id="calMat"
+                                    class="form-select"></select></div>
+                            <div class="mb-2"><label class="form-label">Frecuencia</label><select id="calFreq"
+                                    class="form-select">
+                                    <option value="unico">Único</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="quincenal">Cada 15 días</option>
+                                    <option value="mensual">Mensual</option>
+                                </select></div>
+                            <div class="mb-2"><label class="form-label">Centro de acopio</label><select id="calCentro"
+                                    class="form-select"></select></div>
+                            <div class="mb-2"><label class="form-label">Fecha inicial</label><input id="calFecha"
+                                    type="date" class="form-control"></div>
+                            <div class="mb-2"><label class="form-label">Hora</label><input id="calHora" type="time"
+                                    class="form-control" value="10:00"></div>
+                            <button id="calGuardar" class="btn btn-success w-100">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: CENTROS/PROVEEDORES ============ -->
+            <section class="tab-pane fade" id="proveedores" role="tabpanel" aria-labelledby="proveedores-tab">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Centros de acopio & Proveedores</h5>
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#modalCentro">Nuevo</button>
+                </div>
+                <div class="tab-card p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Contacto</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo</th>
+                                    <th>Ciudad</th>
+                                    <th>Localidad</th>
+                                    <th>Horario</th>
+                                </tr>
+                            </thead>
+                            <tbody id="provTabla">
+                                <tr>
+                                    <td colspan="8" class="text-muted">Cargando…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB: CONVERSACIONES (Chats) ============ -->
+            <section class="tab-pane fade" id="conversaciones" role="tabpanel" aria-labelledby="conversaciones-tab">
+                <div class="row g-3">
+                    <!-- Listado de hilos -->
+                    <div class="col-lg-4">
+                        <div class="tab-card p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">Conversaciones</h6>
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modalNuevaConv">Nueva</button>
+                            </div>
+                            <div class="input-group mb-2"><span class="input-group-text">🔎</span><input
+                                    class="form-control" id="convSearch" placeholder="Buscar…"></div>
+                            <div class="list-group sidebar-threads" id="threadList"><!-- JS hilos --></div>
+                        </div>
+                    </div>
+                    <!-- Ventana de chat -->
+                    <div class="col-lg-8 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div class="fw-semibold" id="chatTitle">Conversación</div>
+                                <small class="text-muted" id="chatSubtitle">—</small>
+                            </div>
+                            <div><span class="badge bg-success-subtle text-success border"
+                                    id="chatEstado">Abierta</span></div>
+                        </div>
+                        <div class="chat-window d-flex flex-column mb-3" id="chatWindow"><!-- JS mensajes --></div>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" id="btnAdj" title="Adjuntar (futuro)">📎</button>
+                            <input type="text" class="form-control" id="chatInput" placeholder="Escribe un mensaje…">
+                            <button class="btn btn-success" id="chatSend">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- =========================================
+       MODAL: Registro de MATERIAL (ventana emergente)
+       ========================================= -->
+    <div class="modal fade" id="modalMaterialNuevo" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <form class="modal-content" id="formMaterialNuevo">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Registrar material</h5>
+                    <button id="btnNuevoMat" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#modalRegistroMaterial">
+                        Añadir material
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- ===== Bloque: Clasificación y datos base ===== -->
+                    <h6 class="mb-2">Clasificación y datos</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4"><label class="form-label">Nombre del material</label><input type="text"
+                                class="form-control" id="matNombre" required></div>
+                        <div class="col-md-4"><label class="form-label">Tipo</label>
+                            <select id="matTipo" class="form-select" required>
+                                <option value="" disabled selected>Selecciona…</option>
+                                <option>Plástico</option>
+                                <option>Papel y cartón</option>
+                                <option>Vidrio</option>
+                                <option>Metales</option>
+                                <option>Orgánicos</option>
+                                <option>RAEE</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4"><label class="form-label">Categoría</label>
+                            <select id="matCategoria" class="form-select">
+                                <option value="">—</option>
+                                <option>PET</option>
+                                <option>PEAD</option>
+                                <option>Aluminio</option>
+                                <option>Chatarra</option>
+                                <option>Botella verde</option>
+                                <option>Mixto</option>
+                            </select>
+                        </div>
+                        <div class="col-12"><label class="form-label">Descripción</label><textarea id="matDesc"
+                                class="form-control" rows="2"
+                                placeholder="Breve descripción (estado, condiciones de recepción, etc.)"></textarea>
+                        </div>
+                        <div class="col-md-4"><label class="form-label">Foto (opcional)</label><input type="file"
+                                id="matFoto" class="form-control" accept="image/*"></div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- ===== Bloque: Almacenamiento, capacidad y umbrales ===== -->
+                    <h6 class="mb-2">Almacenamiento y capacidad</h6>
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3"><label class="form-label">Capacidad máxima (kg)</label><input
+                                type="number" class="form-control" id="matCapMax" min="1" step="0.01" required></div>
+                        <div class="col-md-3"><label class="form-label">Stock inicial (kg)</label><input type="number"
+                                class="form-control" id="matStockIni" min="0" step="0.01" required></div>
+                        <div class="col-md-3"><label class="form-label">Umbral alerta (kg)</label><input type="number"
+                                class="form-control" id="matUmbral" min="0" step="0.01" required></div>
+                        <div class="col-md-3"><label class="form-label">Almacenamiento</label><input type="text"
+                                class="form-control" id="matAlmacen" placeholder="Big bags bajo techo, estibas, etc.">
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="flex-grow-1">
+                                    <div class="small text-muted">Ocupación actual</div>
+                                    <div class="progress progress-thin" role="progressbar" aria-label="Ocupación"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" id="matOcupBar" style="width:0%">0%</div>
+                                    </div>
+                                </div>
+                                <div class="text-end small">
+                                    <div><span class="badge bg-success-subtle text-success border">OK</span> <span
+                                            id="lblOcup">0 / 0 kg</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- ===== Bloque: Precios de referencia ===== -->
+                    <h6 class="mb-2">Precios (opcional)</h6>
+                    <div class="row g-3">
+                        <div class="col-md-3"><label class="form-label">Precio compra (x kg)</label><input type="number"
+                                class="form-control" id="matPrecioCompra" min="0" step="0.01"></div>
+                        <div class="col-md-3"><label class="form-label">Precio venta (x kg)</label><input type="number"
+                                class="form-control" id="matPrecioVenta" min="0" step="0.01"></div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- ===== Bloque: Programar despachos (opcional) ===== -->
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="matProgSwitch">
+                        <label class="form-check-label" for="matProgSwitch">Programar despachos recurrentes
+                            (opcional)</label>
+                    </div>
+                    <div id="matProgFields" class="row g-3 d-none">
+                        <div class="col-md-3"><label class="form-label">Frecuencia</label>
+                            <select id="matFreq" class="form-select">
+                                <option value="manual">Manual</option>
+                                <option value="semanal">Semanal</option>
+                                <option value="quincenal">Cada 15 días</option>
+                                <option value="mensual">Mensual</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3"><label class="form-label">Fecha inicio</label><input id="matFecha"
+                                type="date" class="form-control"></div>
+                        <div class="col-md-2"><label class="form-label">Hora</label><input id="matHora" type="time"
+                                class="form-control" value="10:00"></div>
+                        <div class="col-md-4"><label class="form-label">Centro de acopio</label>
+                            <div class="input-group">
+                                <select id="matCentro" class="form-select"></select>
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modalCentro">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" type="submit">Guardar material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================
+       MODAL: Alta de CENTRO/PROVEEDOR
+       ========================================= -->
+    <div class="modal fade" id="modalCentro" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" id="formCentro">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo centro/proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body row g-3">
+                    <div class="col-md-6"><label class="form-label">Tipo</label>
+                        <select id="cTipo" class="form-select" required>
+                            <option value="Centro de acopio">Centro de acopio</option>
+                            <option value="Proveedor">Proveedor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6"><label class="form-label">NIT (opcional)</label><input type="text"
+                            class="form-control" id="cNIT"></div>
+                    <div class="col-12"><label class="form-label">Nombre</label><input type="text" class="form-control"
+                            id="cNombre" required></div>
+                    <div class="col-md-6"><label class="form-label">Contacto</label><input type="text"
+                            class="form-control" id="cContacto"></div>
+                    <div class="col-md-6"><label class="form-label">Teléfono</label><input type="tel"
+                            class="form-control" id="cTelefono"></div>
+                    <div class="col-md-6"><label class="form-label">Correo</label><input type="email"
+                            class="form-control" id="cEmail"></div>
+                    <div class="col-md-6"><label class="form-label">Horario</label><input type="text"
+                            class="form-control" id="cHorario" placeholder="Lun–Vie 8–17"></div>
+                    <div class="col-md-6"><label class="form-label">Ciudad</label><input type="text"
+                            class="form-control" id="cCiudad" value="Bogotá"></div>
+                    <div class="col-md-6"><label class="form-label">Localidad</label><input type="text"
+                            class="form-control" id="cLocalidad"></div>
+                    <div class="col-12"><label class="form-label">Dirección</label><input type="text"
+                            class="form-control" id="cDireccion"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================
+       MODAL: Nueva CONVERSACIÓN
+       ========================================= -->
+    <div class="modal fade" id="modalNuevaConv" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" id="formNuevaConv">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar conversación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body row g-3">
+                    <div class="col-12"><label class="form-label">Ciudadano</label><input type="text"
+                            class="form-control" id="nvDestinatario" placeholder="Nombre o correo"></div>
+                    <div class="col-12"><label class="form-label">Mensaje inicial</label><textarea id="nvMensaje"
+                            class="form-control" rows="3" placeholder="Hola…"></textarea></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" type="submit">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- MODAL: Registro de Material -->
+<div class="modal fade" id="modalRegistroMaterial" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <form class="modal-content needs-validation" id="formRegistroMaterial" novalidate>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Registrar material</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Datos básicos -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre del material</label>
+                        <input id="rmNombre" type="text" class="form-control" required>
+                        <div class="invalid-feedback">Obligatorio.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tipo</label>
+                        <select id="rmTipo" class="form-select" required>
+                            <option value="" selected disabled>Seleccione…</option>
+                            <option>Plástico</option>
+                            <option>Papel y cartón</option>
+                            <option>Vidrio</option>
+                            <option>Metales</option>
+                            <option>Orgánicos</option>
+                            <option>RAEE</option>
+                        </select>
+                        <div class="invalid-feedback">Seleccione un tipo.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Categoría</label>
+                        <input id="rmCategoria" class="form-control" placeholder="p.ej. PET, Mixto…">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Descripción</label>
+                        <textarea id="rmDesc" class="form-control" rows="2" placeholder="Breve descripción"></textarea>
+                    </div>
+
+                    <!-- Almacenamiento / visibilidad de capacidad -->
+                    <div class="col-md-6">
+                        <label class="form-label">Método de almacenamiento</label>
+                        <input id="rmAlmacen" class="form-control" placeholder="Big bags, estibas, tolva…">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Capacidad máx. (kg)</label>
+                        <input id="rmCapacidad" type="number" min="1" step="0.01" class="form-control" required>
+                        <div class="invalid-feedback">Ingrese capacidad válida.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Stock inicial (kg)</label>
+                        <input id="rmStock" type="number" min="0" step="0.01" class="form-control" value="0" required>
+                        <div class="invalid-feedback">Ingrese stock válido.</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Umbral de alerta (kg)</label>
+                        <input id="rmUmbral" type="number" min="0" step="0.01" class="form-control"
+                            placeholder="p.ej. 80% de capacidad">
+                        <div class="form-text">Opcional. Activa alertas cuando el stock lo alcance.</div>
+                    </div>
+
+                    <!-- Precios -->
+                    <div class="col-md-4">
+                        <label class="form-label">Precio compra (x kg)</label>
+                        <input id="rmPrecioCompra" type="number" min="0" step="0.01" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Precio venta (x kg)</label>
+                        <input id="rmPrecioVenta" type="number" min="0" step="0.01" class="form-control">
+                    </div>
+
+                    <!-- Frecuencia de despacho (opcional) -->
+                    <div class="col-12">
+                        <hr class="my-2">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="rmFreqToggle">
+                            <label class="form-check-label" for="rmFreqToggle">Configurar frecuencia de despacho
+                                (opcional)</label>
+                        </div>
+                    </div>
+
+                    <div id="rmFreqWrap" class="row g-3 d-none">
+                        <div class="col-md-4">
+                            <label class="form-label">Frecuencia</label>
+                            <select id="rmFreq" class="form-select">
+                                <option value="manual" selected>Manual (según necesidad)</option>
+                                <option value="semanal">Semanal</option>
+                                <option value="quincenal">Cada 15 días</option>
+                                <option value="mensual">Mensual</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Día (1–31 o 1–7)</label>
+                            <input id="rmDia" type="number" min="1" max="31" class="form-control"
+                                placeholder="p.ej. 5 o 3=Lunes">
+                            <div class="form-text">Para semanal: 1=Lunes … 7=Domingo.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Hora</label>
+                            <input id="rmHora" type="time" class="form-control" value="10:00">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Centro de acopio</label>
+                            <input id="rmCentro" class="form-control"
+                                placeholder="Nombre del centro (o relación de tu catálogo)">
+                            <div class="form-text">Se relaciona el despacho con este centro.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha inicial</label>
+                            <input id="rmFechaIni" type="date" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" type="submit">Guardar material</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <!-- =========================================
+       TOAST: notificaciones breves
+       ========================================= -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080;">
+        <div id="toastOK" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastText">Acción realizada.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+       SCRIPTS: Bootstrap + lógica básica (simulada)
+       ========================================= -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ==========================================================
+           UTILIDADES: Toast y tabs por hash
+           ========================================================== */
+        const toastEl = document.getElementById('toastOK');
+        const toast = new bootstrap.Toast(toastEl, { delay: 1800 });
+        const showToast = (msg) => { document.getElementById('toastText').textContent = msg; toast.show(); };
+
+        function activateTabFromHash() { const h = window.location.hash || '#perfil'; const el = document.querySelector(`[data-bs-target="${h}"]`); if (el) new bootstrap.Tab(el).show(); }
+        window.addEventListener('hashchange', activateTabFromHash);
+        document.getElementById('ecaTabs').addEventListener('shown.bs.tab', (e) => { history.replaceState(null, '', e.target.getAttribute('data-bs-target')); });
+        activateTabFromHash();
+
+        /* ==========================================================
+           DATOS DEMO (reemplazar por API/BD)
+           ========================================================== */
+        let MATS = [
+            { id: 1, nombre: 'Plástico PET', tipo: 'Plástico', categoria: 'PET', desc: 'Botellas PET transparentes', almacenamiento: 'Sacos bajo techo', capmax: 1200, stock: 600, umbral: 900, precioCompra: 800, precioVenta: 1200, img: '' },
+            { id: 2, nombre: 'Cartón', tipo: 'Papel y cartón', categoria: 'Mixto', desc: 'Cartón corrugado', almacenamiento: 'Estibas', capmax: 2000, stock: 1200, umbral: 1500, precioCompra: 300, precioVenta: 600, img: '' },
+        ];
+        let TERCEROS = [
+            { id: 1, tipo: 'Centro de acopio', nombre: 'Vidrios Andinos', contacto: 'J. Pérez', tel: '3207654321', email: 'comercial@vidrios.co', ciudad: 'Bogotá', localidad: 'Suba', direccion: 'Av. 170 #10-20', horario: 'Lun–Vie 9–17' },
+            { id: 2, tipo: 'Proveedor', nombre: 'ReciclaBog', contacto: 'Ana T.', tel: '3101234567', email: 'ana@rbog.co', ciudad: 'Bogotá', localidad: 'Kennedy', direccion: 'Calle 5 #20-30', horario: 'L–S 8–17' }
+        ];
+        let DESPACHOS = [
+            { fecha: '2025-09-03', hora: '09:30', material: 1, centro: 1 },
+            { fecha: '2025-09-10', hora: '10:00', material: 2, centro: 2 }
+        ];
+        let THREADS = [
+            { id: 1, nombre: 'Ciudadano A', ultimo: '¿Dónde está el punto…?', ts: '2025-08-22 11:03', unread: 2 },
+            { id: 2, nombre: 'Ciudadano B', ultimo: '¿Aceptan plástico hoy?', ts: '2025-08-23 09:18', unread: 0 }
+        ];
+        let MENSAJES = {
+            1: [{ from: 'user', text: '¿Dónde está el punto de reciclaje más cercano?', ts: '11:02' }, { from: 'eca', text: 'Estamos en la Calle 5 #123. Atendemos 8–17.', ts: '11:03' }],
+            2: [{ from: 'user', text: '¿Aceptan plástico hoy?', ts: '09:18' }, { from: 'eca', text: 'Sí, de 8 a 17.', ts: '09:19' }]
+        };
+
+        /* ==========================================================
+           PERFIL: geolocalización (demo)
+           ========================================================== */
+        (function () {
+            const btn = document.getElementById('btnUbicacion'); const latlng = document.getElementById('puntoLatLng');
+            btn.addEventListener('click', () => {
+                if (!('geolocation' in navigator)) return showToast('Tu navegador no soporta geolocalización.');
+                btn.disabled = true; btn.textContent = 'Obteniendo…';
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const { latitude, longitude } = pos.coords; latlng.value = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+                    btn.disabled = false; btn.textContent = 'Obtener ubicación'; showToast('Ubicación obtenida.');
+                }, () => { btn.disabled = false; btn.textContent = 'Obtener ubicación'; showToast('No se pudo obtener la ubicación.'); }, { enableHighAccuracy: true, timeout: 10000 });
+            });
+            document.getElementById('btnGuardarPerfil').addEventListener('click', () => { /* TODO: PATCH /api/eca/points/{id} */ showToast('Perfil guardado (simulado).'); });
+        })();
+
+        /* ==========================================================
+           INVENTARIO: selects y tabla
+           ========================================================== */
+        function fillSelect(id, items, getVal = x => x.id, getTxt = x => x.nombre) { const sel = document.getElementById(id); sel.innerHTML = items.map(x => `<option value="${getVal(x)}">${getTxt(x)}</option>`).join(''); }
+        fillSelect('entMaterial', MATS); fillSelect('entProveedor', TERCEROS.filter(t => t.tipo === 'Proveedor'));
+
+        function nextDispatchForMaterial(mid) {
+            const list = DESPACHOS.filter(d => d.material === mid).map(d => d.fecha).sort(); return list[0] || '—';
+        }
+        function ocupacionPct(m) { return m.capmax ? Math.min(100, Math.round((m.stock / m.capmax) * 100)) : 0; }
+        function barClass(m) { const p = ocupacionPct(m); if (m.stock >= m.umbral) return 'bg-danger'; if (p >= 75) return 'bg-warning'; return 'bg-success'; }
+
+        function renderInventario() {
+            const tb = document.querySelector('#tablaInventario tbody');
+            tb.innerHTML = MATS.map(m => {
+                const p = ocupacionPct(m); const cls = barClass(m); const prox = nextDispatchForMaterial(m.id);
+                return `<tr>
+          <td>${m.nombre}</td>
+          <td><span class="badge badge-soft">${m.tipo}</span> <small class="text-muted">${m.categoria || ''}</small></td>
+          <td style="min-width:220px"><div class="progress progress-thin"><div class="progress-bar ${cls}" style="width:${p}%">${p}%</div></div></td>
+          <td>${m.stock}</td><td>${m.capmax}</td><td>${m.umbral}</td><td>${prox}</td>
+        </tr>`;
+            }).join('');
+        }
+        renderInventario();
+
+        // Registrar entrada rápida
+        document.getElementById('formEntrada').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const mid = +document.getElementById('entMaterial').value; const kg = +document.getElementById('entStock').value || 0; const p = +document.getElementById('entPrecio').value || 0; const prov = document.getElementById('entProveedor').value || '';
+            const m = MATS.find(x => x.id === mid); if (!m) return;
+            m.stock = (m.stock || 0) + kg; renderInventario(); addCompraHist(new Date(), mid, kg, prov, p); showToast('Entrada registrada');
+            // TODO: POST /api/eca/points/{id}/inventory/entries
+            e.target.reset();
+        });
+
+        /* ==========================================================
+           MATERIALES: grid + modal de alta con umbrales y frecuencia
+           ========================================================== */
+        function renderGridMateriales() {
+            const grid = document.getElementById('gridMateriales');
+            grid.innerHTML = MATS.map(m => {
+                const p = ocupacionPct(m), cls = barClass(m);
+                return `<div class="col-12 col-md-6 col-lg-4">
+          <div class="border rounded p-3 h-100 d-flex gap-3">
+            <img class="material-thumb" src="${m.img || 'https://picsum.photos/seed/' + m.id + '/200/200'}" alt="${m.nombre}">
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-semibold">${m.nombre}</div>
+                  <div class="small text-muted">${m.tipo}${m.categoria ? ' · ' + m.categoria : ''}</div>
+                </div>
+                <span class="badge ${cls === 'bg-danger' ? 'bg-danger' : 'badge-soft'}">${m.stock}/${m.capmax} kg</span>
+              </div>
+              <div class="progress progress-thin mt-2"><div class="progress-bar ${cls}" style="width:${p}%"></div></div>
+              <div class="small mt-2">Umbral: <strong>${m.umbral} kg</strong> · Próx. despacho: <strong>${nextDispatchForMaterial(m.id)}</strong></div>
+              <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-outline-success btn-sm" data-mid="${m.id}" data-action="editar">Editar</button>
+                <button class="btn btn-outline-secondary btn-sm" data-mid="${m.id}" data-action="mov">Movimientos</button>
+              </div>
+            </div>
+          </div>
+        </div>`
+            }).join('');
+            grid.querySelectorAll('button[data-action="editar"]').forEach(b => b.addEventListener('click', () => openEditMaterial(+b.dataset.mid)));
+            grid.querySelectorAll('button[data-action="mov"]').forEach(b => b.addEventListener('click', () => { location.hash = '#historial'; document.getElementById('hsMaterial').value = b.dataset.mid; document.getElementById('hcMaterial').value = b.dataset.mid; renderHistorial(); }));
+        }
+        renderGridMateriales();
+
+        // Modal: live ocupación preview
+        function updateOcupPreview() {
+            const cap = +document.getElementById('matCapMax').value || 0; const st = +document.getElementById('matStockIni').value || 0; const um = +document.getElementById('matUmbral').value || 0;
+            const pct = cap ? Math.min(100, Math.round(st / cap * 100)) : 0; const bar = document.getElementById('matOcupBar');
+            bar.style.width = pct + '%'; bar.textContent = pct + '%';
+            bar.classList.remove('bg-success', 'bg-warning', 'bg-danger');
+            bar.classList.add(st >= um ? 'bg-danger' : (pct >= 75 ? 'bg-warning' : 'bg-success'));
+            document.getElementById('lblOcup').textContent = `${st} / ${cap} kg`;
+        }
+        ['matCapMax', 'matStockIni', 'matUmbral'].forEach(id => document.addEventListener('input', (e) => { if (e.target.id === id) updateOcupPreview(); }));
+
+        // Toggle programación
+        document.getElementById('matProgSwitch').addEventListener('change', (e) => {
+            document.getElementById('matProgFields').classList.toggle('d-none', !e.target.checked);
+        });
+
+        // Llenar selects dependientes
+        function refreshMaterialSelects() { fillSelect('entMaterial', MATS); fillSelect('hcMaterial', [{ id: '', nombre: 'Todos los materiales' }, ...MATS]); fillSelect('hsMaterial', [{ id: '', nombre: 'Todos los materiales' }, ...MATS]); fillSelect('calMat', MATS); }
+        function refreshCentroSelects() {
+            fillSelect('entProveedor', TERCEROS.filter(t => t.tipo === 'Proveedor')); fillSelect('calCentro', TERCEROS, x => x.id, x => `${x.nombre} (${x.tipo})`); const centroSel = document.getElementById('matCentro'); if (centroSel) { centroSel.innerHTML = TERCEROS.map(x => `<option value="${x.id}">${x.nombre} (${x.tipo})</option>`).join(''); }
+        }
+        refreshMaterialSelects(); refreshCentroSelects();
+
+        // Guardar material (alta)
+        document.getElementById('formMaterialNuevo').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const m = {
+                id: Date.now(),
+                nombre: document.getElementById('matNombre').value.trim(),
+                tipo: document.getElementById('matTipo').value,
+                categoria: document.getElementById('matCategoria').value,
+                desc: document.getElementById('matDesc').value.trim(),
+                almacenamiento: document.getElementById('matAlmacen').value.trim(),
+                capmax: +document.getElementById('matCapMax').value || 0,
+                stock: +document.getElementById('matStockIni').value || 0,
+                umbral: +document.getElementById('matUmbral').value || 0,
+                precioCompra: +document.getElementById('matPrecioCompra').value || 0,
+                precioVenta: +document.getElementById('matPrecioVenta').value || 0,
+                img: ''
+            };
+            // Validación mínima
+            if (!m.nombre || !m.tipo || !m.capmax) return;
+            MATS.push(m);
+            renderInventario(); renderGridMateriales(); refreshMaterialSelects();
+            // Programación opcional
+            if (document.getElementById('matProgSwitch').checked) {
+                const freq = document.getElementById('matFreq').value; const fecha = document.getElementById('matFecha').value; const hora = document.getElementById('matHora').value || '10:00'; const centro = +document.getElementById('matCentro').value || null;
+                if (fecha && centro) { scheduleRecurrence(m.id, centro, fecha, hora, freq); renderCalendar(); }
+            }
+            // TODO: POST /api/materials y /api/eca/points/{id}/materials
+            bootstrap.Modal.getInstance(document.getElementById('modalMaterialNuevo')).hide(); e.target.reset(); updateOcupPreview(); showToast('Material registrado');
+        });
+
+        function openEditMaterial(id) {
+            const m = MATS.find(x => x.id === id); if (!m) return;
+            const modal = new bootstrap.Modal(document.getElementById('modalMaterialNuevo'));
+            document.getElementById('matNombre').value = m.nombre;
+            document.getElementById('matTipo').value = m.tipo;
+            document.getElementById('matCategoria').value = m.categoria || '';
+            document.getElementById('matDesc').value = m.desc || '';
+            document.getElementById('matAlmacen').value = m.almacenamiento || '';
+            document.getElementById('matCapMax').value = m.capmax || 0;
+            document.getElementById('matStockIni').value = m.stock || 0;
+            document.getElementById('matUmbral').value = m.umbral || 0;
+            document.getElementById('matPrecioCompra').value = m.precioCompra || 0;
+            document.getElementById('matPrecioVenta').value = m.precioVenta || 0;
+            document.getElementById('matProgSwitch').checked = false; document.getElementById('matProgFields').classList.add('d-none');
+            updateOcupPreview();
+            modal.show();
+            // Nota: para edición verdadera deberías guardar un "editId" y hacer PATCH en submit
+        }
+
+        /* ==========================================================
+           HISTORIAL (compras/salidas) y helpers
+           ========================================================== */
+        const HIST_COMPRAS = []; const HIST_SALIDAS = [];
+        function addCompraHist(fecha, material, kg, proveedorNombre, punit) { HIST_COMPRAS.push({ fecha: fmtDate(fecha), material, kg, proveedor: proveedorNombre, punit }); renderHistorial(); }
+        function addSalidaHist(fecha, material, kg, centroId, punit) { const centro = TERCEROS.find(t => t.id === centroId)?.nombre || '—'; HIST_SALIDAS.push({ fecha: fmtDate(fecha), material, kg, centro, punit }); renderHistorial(); }
+
+        function renderHistorial() {
+            // Compras
+            const matSel = +document.getElementById('hcMaterial').value || 0; const desde = document.getElementById('hcDesde').value || '0000-01-01'; const hasta = document.getElementById('hcHasta').value || '9999-12-31';
+            const rowsC = HIST_COMPRAS.filter(h => (!matSel || h.material === matSel) && h.fecha >= desde && h.fecha <= hasta).map(h => {
+                const mat = MATS.find(m => m.id === h.material)?.nombre || '—'; const total = (h.kg * (h.punit || 0)) || 0;
+                return `<tr><td>${h.fecha}</td><td>${mat}</td><td>${h.kg}</td><td>${h.proveedor || '—'}</td><td>${(h.punit || 0).toLocaleString('es-CO')}</td><td>${total.toLocaleString('es-CO')}</td></tr>`;
+            }).join('');
+            document.getElementById('hcTabla').innerHTML = rowsC || '<tr><td colspan="6" class="text-muted">Sin registros</td></tr>';
+            // Salidas
+            const matSelS = +document.getElementById('hsMaterial').value || 0; const desdeS = document.getElementById('hsDesde').value || '0000-01-01'; const hastaS = document.getElementById('hsHasta').value || '9999-12-31';
+            const rowsS = HIST_SALIDAS.filter(h => (!matSelS || h.material === matSelS) && h.fecha >= desdeS && h.fecha <= hastaS).map(h => {
+                const mat = MATS.find(m => m.id === h.material)?.nombre || '—'; const total = (h.kg * (h.punit || 0)) || 0;
+                return `<tr><td>${h.fecha}</td><td>${mat}</td><td>${h.kg}</td><td>${h.centro}</td><td>${(h.punit || 0).toLocaleString('es-CO')}</td><td>${total.toLocaleString('es-CO')}</td></tr>`;
+            }).join('');
+            document.getElementById('hsTabla').innerHTML = rowsS || '<tr><td colspan="6" class="text-muted">Sin registros</td></tr>';
+        }
+        document.getElementById('hcFiltrar').addEventListener('click', renderHistorial);
+        document.getElementById('hsFiltrar').addEventListener('click', renderHistorial);
+        renderHistorial();
+
+        /* ==========================================================
+           CALENDARIO: utilidades + programación
+           ========================================================== */
+        function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+        function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth() + 1, 0); }
+        function pad2(n) { return String(n).padStart(2, '0'); }
+        function fmtDate(d) { if (typeof d === 'string') return d; return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+
+        const calState = { date: new Date() };
+        function renderCalendar() {
+            document.getElementById('calTitulo').textContent = calState.date.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
+            const first = startOfMonth(calState.date); const last = endOfMonth(calState.date); const firstDow = (first.getDay() + 6) % 7; const days = last.getDate();
+            const grid = document.getElementById('calGrid'); grid.innerHTML = '';
+            for (let i = 0; i < firstDow; i++) grid.appendChild(document.createElement('div'));
+            for (let day = 1; day <= days; day++) {
+                const cell = document.createElement('div'); cell.className = 'day'; const date = new Date(calState.date.getFullYear(), calState.date.getMonth(), day); const iso = fmtDate(date);
+                const label = document.createElement('div'); label.className = 'small text-muted'; label.textContent = day; cell.appendChild(label);
+                DESPACHOS.filter(e => e.fecha === iso).forEach(e => {
+                    const mat = MATS.find(m => m.id === e.material)?.nombre || '—'; const center = TERCEROS.find(t => t.id === e.centro)?.nombre || '—';
+                    const ev = document.createElement('span'); ev.className = 'event'; ev.textContent = `${e.hora} · ${mat} → ${center}`; cell.appendChild(ev);
+                });
+                const hoy = new Date(); if (date.toDateString() === hoy.toDateString()) cell.classList.add('today');
+                grid.appendChild(cell);
+            }
+        }
+        document.getElementById('calPrev').addEventListener('click', () => { calState.date.setMonth(calState.date.getMonth() - 1); renderCalendar(); });
+        document.getElementById('calNext').addEventListener('click', () => { calState.date.setMonth(calState.date.getMonth() + 1); renderCalendar(); });
+
+        function scheduleRecurrence(matId, centroId, fecha, hora, freq) {
+            // Inserta 1ra ocurrencia
+            DESPACHOS.push({ fecha, hora, material: matId, centro: centroId });
+            // Genera 3 ocurrencias más de ejemplo
+            const base = new Date(fecha + 'T00:00:00');
+            const add = (days) => { const d = new Date(base); d.setDate(d.getDate() + days); DESPACHOS.push({ fecha: fmtDate(d), hora, material: matId, centro: centroId }); };
+            if (freq === 'semanal') { add(7); add(14); add(21); }
+            if (freq === 'quincenal') { add(15); add(30); add(45); }
+            if (freq === 'mensual') { const m1 = new Date(base); m1.setMonth(m1.getMonth() + 1); DESPACHOS.push({ fecha: fmtDate(m1), hora, material: matId, centro: centroId }); const m2 = new Date(base); m2.setMonth(m2.getMonth() + 2); DESPACHOS.push({ fecha: fmtDate(m2), hora, material: matId, centro: centroId }); const m3 = new Date(base); m3.setMonth(m3.getMonth() + 3); DESPACHOS.push({ fecha: fmtDate(m3), hora, material: matId, centro: centroId }); }
+        }
+
+        // Programación desde panel lateral
+        function initCalPanel() { fillSelect('calMat', MATS); fillSelect('calCentro', TERCEROS, x => x.id, x => `${x.nombre} (${x.tipo})`); }
+        initCalPanel(); renderCalendar();
+
+        document.getElementById('calGuardar').addEventListener('click', () => {
+            const mat = +document.getElementById('calMat').value; const freq = document.getElementById('calFreq').value; const centro = +document.getElementById('calCentro').value; const fecha = document.getElementById('calFecha').value; const hora = document.getElementById('calHora').value || '10:00';
+            if (!mat || !centro || !fecha) return;
+            scheduleRecurrence(mat, centro, fecha, hora, freq); renderCalendar(); showToast('Despacho programado');
+            // TODO: POST /api/despachos
+        });
+
+        /* ==========================================================
+           CENTROS/PROVEEDORES: render y alta por modal
+           ========================================================== */
+        function renderTerceros() {
+            const tb = document.getElementById('provTabla');
+            tb.innerHTML = TERCEROS.map(t => `<tr><td>${t.nombre}</td><td>${t.tipo}</td><td>${t.contacto || '—'}</td><td>${t.tel || '—'}</td><td>${t.email || '—'}</td><td>${t.ciudad || '—'}</td><td>${t.localidad || '—'}</td><td>${t.horario || '—'}</td></tr>`).join('');
+            refreshCentroSelects();
+        }
+        renderTerceros();
+
+        document.getElementById('formCentro').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const t = { id: Date.now(), tipo: document.getElementById('cTipo').value, nombre: document.getElementById('cNombre').value.trim(), contacto: document.getElementById('cContacto').value.trim(), tel: document.getElementById('cTelefono').value.trim(), email: document.getElementById('cEmail').value.trim(), horario: document.getElementById('cHorario').value.trim(), ciudad: document.getElementById('cCiudad').value.trim(), localidad: document.getElementById('cLocalidad').value.trim(), direccion: document.getElementById('cDireccion').value.trim(), nit: document.getElementById('cNIT').value.trim() };
+            if (!t.nombre) return;
+            TERCEROS.push(t); renderTerceros(); showToast('Centro/proveedor creado');
+            bootstrap.Modal.getInstance(document.getElementById('modalCentro')).hide(); e.target.reset();
+            // Si el modal de material está abierto, refrescamos su select de centro
+            refreshCentroSelects();
+            // TODO: POST /api/terceros
+        });
+
+        /* ==========================================================
+           CONVERSACIONES (Chats): hilos + mensajes
+           ========================================================== */
+        function renderThreads(filter = '') {
+            const list = document.getElementById('threadList'); const f = filter.toLowerCase(); list.innerHTML = THREADS.filter(t => !f || t.nombre.toLowerCase().includes(f) || (t.ultimo || '').toLowerCase().includes(f)).map(t => `
+        <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-start" data-thread-id="${t.id}">
+          <div>
+            <div class="fw-semibold">${t.nombre}</div>
+            <small class="text-muted">${t.ultimo || ''}</small>
+          </div>
+          ${t.unread ? `<span class="badge bg-success rounded-pill">${t.unread}</span>` : ''}
+        </button>`).join('');
+        }
+        renderThreads();
+
+        function openThread(id) {
+            const t = THREADS.find(x => x.id === id); const msgs = MENSAJES[id] || []; document.getElementById('chatTitle').textContent = t ? t.nombre : 'Conversación'; document.getElementById('chatSubtitle').textContent = t ? t.ts : '—';
+            const win = document.getElementById('chatWindow'); win.innerHTML = ''; msgs.forEach(m => { const div = document.createElement('div'); div.className = 'message ' + (m.from === 'eca' ? 'eca' : 'user'); div.textContent = `${m.text}`; win.appendChild(div); }); win.scrollTop = win.scrollHeight; currentThread = id; if (t) { t.unread = 0; renderThreads(document.getElementById('convSearch').value); }
+        }
+        let currentThread = THREADS[0]?.id || null; if (currentThread) openThread(currentThread);
+
+        document.getElementById('threadList').addEventListener('click', (e) => { const btn = e.target.closest('[data-thread-id]'); if (!btn) return; openThread(+btn.dataset.threadId); });
+        document.getElementById('convSearch').addEventListener('input', (e) => renderThreads(e.target.value));
+
+        document.getElementById('chatSend').addEventListener('click', () => {
+            const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text || !currentThread) return;
+            MENSAJES[currentThread] = MENSAJES[currentThread] || []; MENSAJES[currentThread].push({ from: 'eca', text, ts: new Date().toLocaleTimeString() });
+            openThread(currentThread); input.value = '';
+            // TODO: POST /api/conversations/{id}/messages
+        });
+
+        document.getElementById('formNuevaConv').addEventListener('submit', (e) => {
+            e.preventDefault(); const name = document.getElementById('nvDestinatario').value.trim(); const msg = document.getElementById('nvMensaje').value.trim(); if (!name) return;
+            const id = Date.now(); THREADS.unshift({ id, nombre: name, ultimo: msg || 'Nuevo hilo', ts: new Date().toISOString().slice(0, 16).replace('T', ' '), unread: 0 }); MENSAJES[id] = []; if (msg) MENSAJES[id].push({ from: 'eca', text: msg, ts: new Date().toLocaleTimeString() }); renderThreads(); openThread(id); bootstrap.Modal.getInstance(document.getElementById('modalNuevaConv')).hide(); e.target.reset(); showToast('Conversación creada');
+            // TODO: POST /api/conversations (crear hilo)
+        });
+
+    </script>
+</body>
+
+</html>
