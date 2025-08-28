@@ -1,5 +1,8 @@
 ### AJUSTES BASE DE DATOS
 
+##### Cambiar todos los ids para que no sea autoincrementables y sean codigo por ejemplo de barras
+##### Encriptar las contraseñas 
+
 # 1.REGISTROS
 
 - # TABLA USUARIOS
