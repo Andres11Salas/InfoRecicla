@@ -1,4 +1,22 @@
+# ========================================
+# Este archivo controla redirecciones y reglas de acceso en Apache
+# ========================================
+
+# Desactiva MultiViews (opción de Apache que intenta "adivinar" archivos si no encuentra coincidencia exacta)
+# Ejemplo: sin esta línea, si pides /contact y existe contact.php, Apache podría servirlo automáticamente.
 Options -MultiViews
-RewriteEngine On
-RewreiteCond %{REQUEST_FILENAME} !-f
+
+# Activa el motor de reescritura de URLs
+# Esto es necesario para que funcionen las reglas "RewriteCond" y "RewriteRule" que vienen más abajo.
+RewriteEngine On 
+
+# Esta condición verifica si el recurso solicitado NO es un archivo físico que exista en el servidor (!-f).
+# Si el archivo sí existe (ej: style.css, foto.jpg), entonces no aplica la regla de abajo.
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Regla de reescritura principal:
+# ^              → Coincide con cualquier ruta (básicamente "todo")
+# index.php      → Redirige todas las peticiones a index.php
+# [QSA,L]        → QSA: conserva parámetros de la URL original (?id=123)
+#                  L: indica que esta es la última regla que se debe aplicar si coincide.
 RewriteRule ^ index.php [QSA,L]
