@@ -687,131 +687,133 @@
         </div>
     </div>
 
-<!-- MODAL: Registro de Material -->
-<div class="modal fade" id="modalRegistroMaterial" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <form class="modal-content needs-validation" id="formRegistroMaterial" novalidate>
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Registrar material</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-                <!-- Datos básicos -->
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Nombre del material</label>
-                        <input id="rmNombre" type="text" class="form-control" required>
-                        <div class="invalid-feedback">Obligatorio.</div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Tipo</label>
-                        <select id="rmTipo" class="form-select" required>
-                            <option value="" selected disabled>Seleccione…</option>
-                            <option>Plástico</option>
-                            <option>Papel y cartón</option>
-                            <option>Vidrio</option>
-                            <option>Metales</option>
-                            <option>Orgánicos</option>
-                            <option>RAEE</option>
-                        </select>
-                        <div class="invalid-feedback">Seleccione un tipo.</div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Categoría</label>
-                        <input id="rmCategoria" class="form-control" placeholder="p.ej. PET, Mixto…">
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label">Descripción</label>
-                        <textarea id="rmDesc" class="form-control" rows="2" placeholder="Breve descripción"></textarea>
-                    </div>
-
-                    <!-- Almacenamiento / visibilidad de capacidad -->
-                    <div class="col-md-6">
-                        <label class="form-label">Método de almacenamiento</label>
-                        <input id="rmAlmacen" class="form-control" placeholder="Big bags, estibas, tolva…">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Capacidad máx. (kg)</label>
-                        <input id="rmCapacidad" type="number" min="1" step="0.01" class="form-control" required>
-                        <div class="invalid-feedback">Ingrese capacidad válida.</div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Stock inicial (kg)</label>
-                        <input id="rmStock" type="number" min="0" step="0.01" class="form-control" value="0" required>
-                        <div class="invalid-feedback">Ingrese stock válido.</div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Umbral de alerta (kg)</label>
-                        <input id="rmUmbral" type="number" min="0" step="0.01" class="form-control"
-                            placeholder="p.ej. 80% de capacidad">
-                        <div class="form-text">Opcional. Activa alertas cuando el stock lo alcance.</div>
-                    </div>
-
-                    <!-- Precios -->
-                    <div class="col-md-4">
-                        <label class="form-label">Precio compra (x kg)</label>
-                        <input id="rmPrecioCompra" type="number" min="0" step="0.01" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Precio venta (x kg)</label>
-                        <input id="rmPrecioVenta" type="number" min="0" step="0.01" class="form-control">
-                    </div>
-
-                    <!-- Frecuencia de despacho (opcional) -->
-                    <div class="col-12">
-                        <hr class="my-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="rmFreqToggle">
-                            <label class="form-check-label" for="rmFreqToggle">Configurar frecuencia de despacho
-                                (opcional)</label>
-                        </div>
-                    </div>
-
-                    <div id="rmFreqWrap" class="row g-3 d-none">
-                        <div class="col-md-4">
-                            <label class="form-label">Frecuencia</label>
-                            <select id="rmFreq" class="form-select">
-                                <option value="manual" selected>Manual (según necesidad)</option>
-                                <option value="semanal">Semanal</option>
-                                <option value="quincenal">Cada 15 días</option>
-                                <option value="mensual">Mensual</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Día (1–31 o 1–7)</label>
-                            <input id="rmDia" type="number" min="1" max="31" class="form-control"
-                                placeholder="p.ej. 5 o 3=Lunes">
-                            <div class="form-text">Para semanal: 1=Lunes … 7=Domingo.</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Hora</label>
-                            <input id="rmHora" type="time" class="form-control" value="10:00">
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label">Centro de acopio</label>
-                            <input id="rmCentro" class="form-control"
-                                placeholder="Nombre del centro (o relación de tu catálogo)">
-                            <div class="form-text">Se relaciona el despacho con este centro.</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Fecha inicial</label>
-                            <input id="rmFechaIni" type="date" class="form-control">
-                        </div>
-                    </div>
-
+    <!-- MODAL: Registro de Material -->
+    <div class="modal fade" id="modalRegistroMaterial" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <form class="modal-content needs-validation" id="formRegistroMaterial" novalidate>
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Registrar material</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-success" type="submit">Guardar material</button>
-            </div>
-        </form>
+                <div class="modal-body">
+                    <!-- Datos básicos -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del material</label>
+                            <input id="rmNombre" type="text" class="form-control" required>
+                            <div class="invalid-feedback">Obligatorio.</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo</label>
+                            <select id="rmTipo" class="form-select" required>
+                                <option value="" selected disabled>Seleccione…</option>
+                                <option>Plástico</option>
+                                <option>Papel y cartón</option>
+                                <option>Vidrio</option>
+                                <option>Metales</option>
+                                <option>Orgánicos</option>
+                                <option>RAEE</option>
+                            </select>
+                            <div class="invalid-feedback">Seleccione un tipo.</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Categoría</label>
+                            <input id="rmCategoria" class="form-control" placeholder="p.ej. PET, Mixto…">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <textarea id="rmDesc" class="form-control" rows="2"
+                                placeholder="Breve descripción"></textarea>
+                        </div>
+
+                        <!-- Almacenamiento / visibilidad de capacidad -->
+                        <div class="col-md-6">
+                            <label class="form-label">Método de almacenamiento</label>
+                            <input id="rmAlmacen" class="form-control" placeholder="Big bags, estibas, tolva…">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Capacidad máx. (kg)</label>
+                            <input id="rmCapacidad" type="number" min="1" step="0.01" class="form-control" required>
+                            <div class="invalid-feedback">Ingrese capacidad válida.</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Stock inicial (kg)</label>
+                            <input id="rmStock" type="number" min="0" step="0.01" class="form-control" value="0"
+                                required>
+                            <div class="invalid-feedback">Ingrese stock válido.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Umbral de alerta (kg)</label>
+                            <input id="rmUmbral" type="number" min="0" step="0.01" class="form-control"
+                                placeholder="p.ej. 80% de capacidad">
+                            <div class="form-text">Opcional. Activa alertas cuando el stock lo alcance.</div>
+                        </div>
+
+                        <!-- Precios -->
+                        <div class="col-md-4">
+                            <label class="form-label">Precio compra (x kg)</label>
+                            <input id="rmPrecioCompra" type="number" min="0" step="0.01" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Precio venta (x kg)</label>
+                            <input id="rmPrecioVenta" type="number" min="0" step="0.01" class="form-control">
+                        </div>
+
+                        <!-- Frecuencia de despacho (opcional) -->
+                        <div class="col-12">
+                            <hr class="my-2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="rmFreqToggle">
+                                <label class="form-check-label" for="rmFreqToggle">Configurar frecuencia de despacho
+                                    (opcional)</label>
+                            </div>
+                        </div>
+
+                        <div id="rmFreqWrap" class="row g-3 d-none">
+                            <div class="col-md-4">
+                                <label class="form-label">Frecuencia</label>
+                                <select id="rmFreq" class="form-select">
+                                    <option value="manual" selected>Manual (según necesidad)</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="quincenal">Cada 15 días</option>
+                                    <option value="mensual">Mensual</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Día (1–31 o 1–7)</label>
+                                <input id="rmDia" type="number" min="1" max="31" class="form-control"
+                                    placeholder="p.ej. 5 o 3=Lunes">
+                                <div class="form-text">Para semanal: 1=Lunes … 7=Domingo.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Hora</label>
+                                <input id="rmHora" type="time" class="form-control" value="10:00">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label">Centro de acopio</label>
+                                <input id="rmCentro" class="form-control"
+                                    placeholder="Nombre del centro (o relación de tu catálogo)">
+                                <div class="form-text">Se relaciona el despacho con este centro.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Fecha inicial</label>
+                                <input id="rmFechaIni" type="date" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" type="submit">Guardar material</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 
     <!-- =========================================
