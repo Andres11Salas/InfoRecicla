@@ -3,6 +3,8 @@
 --Se le quita a todas las tablas con id auto_increment
 --y se les pone id INT PRIMARY KEY
 
+
+
 -- 1. Crear base de datos y usarla
 CREATE DATABASE IF NOT EXISTS InfoRecicla;
 USE InfoRecicla;
@@ -167,16 +169,15 @@ CREATE TABLE favoritos (
 
 -- 14. Tabla comentarios
 CREATE TABLE comentarios (
-  id INT  PRIMARY KEY,
+  id INT PRIMARY KEY,
   usuario_id INT NOT NULL,
   publicacion_id INT NOT NULL,
   punto_eca_id INT,
   contenido TEXT NOT NULL,
-  creado TIMESTAMP NOT NULL DEFAULT NOW()
   texto TEXT,
-  creado TIMESTAMP NOT NULL DEFAULT NOW()
-    tipo ENUM('publicacion','punto eca'),
-  referencia_id INT NOT NULL,
+  creado TIMESTAMP NOT NULL DEFAULT NOW(),
+  tipo ENUM('publicacion','punto eca'),
+  referencia_id INT NOT NULL
 );
 
 -- 15. Tabla notificaciones
