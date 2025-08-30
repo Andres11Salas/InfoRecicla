@@ -1,14 +1,29 @@
+
+-----NOTA GLOBAL-----
+--Se le quita a todas las tablas con id auto_increment
+--y se les pone id INT PRIMARY KEY
+
 -- 1. Crear base de datos y usarla
 CREATE DATABASE IF NOT EXISTS InfoRecicla;
 USE InfoRecicla;
 
 -- 2. Tabla usuarios
 CREATE TABLE usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
+  numero_de_documento int(20) NOT NULL UNIQUE, -- añadido 
+  tipo_documentio ENUM('Cédula de Ciudadanía','Cédula de Extranjería','Pasaporte','Tarjeta de Identidad') NOT NULL, --añadido
+  avatar_url VARCHAR(255), -- añadido
+  telefono VARCHAR(20), -- añadido
+  recibe_notificaciones BOOLEAN NOT NULL DEFAULT TRUE,  -- añadido
+  nombre_usuario VARCHAR(50) NOT NULL UNIQUE, -- añadido
   correo VARCHAR(100) NOT NULL,
   contraseña VARCHAR(255) NOT NULL,
   nombre VARCHAR(50) NOT NULL,
   apellido VARCHAR(50) NOT NULL,
+  direccion VARCHAR(150),
+  fecha_nacimiento DATE, 
+  localidad VARCHAR(50),  -- añadido
+  genero ENUM('Masculino','Femenino','Otro'),-- añadido
   rol ENUM('Ciudadano','GestorECA','Administrador') NOT NULL,
   creado DATETIME NOT NULL
 );
@@ -17,7 +32,7 @@ CREATE TABLE usuarios (
 CREATE TABLE perfiles_ciudadano (
   usuario_id INT PRIMARY KEY,
   edad INT,
-  genero ENUM('Masculino','Femenino','Otro'),
+  --- se retira genero
   ubicacion VARCHAR(100)
 );
 
@@ -31,24 +46,31 @@ CREATE TABLE perfiles_punto_eca (
 
 -- 5. Tabla ciudades
 CREATE TABLE ciudades (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL
 );
 
+
 -- 6. Tabla localidades
 CREATE TABLE localidades (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   ciudad_id INT NOT NULL,
   nombre VARCHAR(100) NOT NULL
 );
 
 -- 7. Tabla puntos_eca
 CREATE TABLE puntos_eca (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   gestor_id INT NOT NULL,
+  nit VARCHAR(20) NOT NULL UNIQUE,  -- añadido
   nombre VARCHAR(100) NOT NULL,
   descripcion TEXT,
   direccion VARCHAR(150) NOT NULL,
+  horario_atencion VARCHAR(100), -- añadido
+  sitio_web VARCHAR(100), -- añadido
+  logo_url VARCHAR(255), -- añadido
+  foto_url VARCHAR(255),  -- añadido
+  mostrar_mapa BOOLEAN NOT NULL DEFAULT TRUE, -- añadido
   ciudad_id INT NOT NULL,
   localidad_id INT,
   latitud DECIMAL(9,6),
@@ -59,14 +81,19 @@ CREATE TABLE puntos_eca (
 
 -- 8. Tabla materiales
 CREATE TABLE materiales (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   descripcion TEXT
+  tipo VARCHAR(20), -- añadido
+  categoria VARCHAR(20),-- añadido
+  imagen_url VARCHAR(255),-- añadido
+  precio_compra DECIMAL(7,2),-- añadido
+  precio_venta DECIMAL(7,2)-- añadido
 );
 
 -- 9. Tabla capacidad_material_punto_eca
 CREATE TABLE capacidad_material_punto_eca (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   punto_eca_id INT NOT NULL,
   tipo_id INT NOT NULL,
   material_id INT NOT NULL,
@@ -76,23 +103,26 @@ CREATE TABLE capacidad_material_punto_eca (
 
 -- 10. Tabla inventario
 CREATE TABLE inventario (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   punto_eca_id INT NOT NULL,
   material_id INT NOT NULL,
   cantidad DECIMAL(10,2) NOT NULL,
   fecha_registro TIMESTAMP NOT NULL DEFAULT NOW()
+  stock_actual decimal (10,2), -- añadido
+  umbral_alerta decimal (10,2), -- añadido
+  umbral_critico decimal (10,2) -- añadido
 );
 
 -- 11. Tabla tipos_publicacion
 CREATE TABLE tipos_publicacion (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   descripcion TEXT
 );
 
 -- 12. Tabla publicaciones
 CREATE TABLE publicaciones (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   autor_id INT NOT NULL,
   tipo_id INT NOT NULL,
   titulo VARCHAR(150) NOT NULL,
@@ -103,10 +133,33 @@ CREATE TABLE publicaciones (
   creado TIMESTAMP NOT NULL DEFAULT NOW(),
   actualizado TIMESTAMP NOT NULL DEFAULT NOW()
 );
-
+--------------------------------------
+--Se agrega tabla Categorias 
+--13. Tabla categorias_publicaciones
+create table categorias_publicaciones(
+  id INT PRIMARY KEY,
+  publicacion_id INT NOT NULL,
+  tipo ENUM('imagen','video','documento','enlace') NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  titulo VARCHAR(50),
+  descripcion TEXT
+);
+-------------------------------------
+-------------------------------------
+--Se agrega tabla Etiquetas
+--14. Tabla votos
+create table votos(
+  tipo ENUM('pulicacion','punto eca')
+  referencia_id INT NOT NULL,
+  usuario_id INT NOT NULL,
+  valor ENUM('like','dislike'),
+  creado TIMESTAMP NOT NULL DEFAULT NOW()
+);
+-------------------------------------
+-------------------------------------
 -- 13. Tabla favoritos
 CREATE TABLE favoritos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT  PRIMARY KEY,
   usuario_id INT NOT NULL,
   publicacion_id INT NOT NULL,
   creado TIMESTAMP NOT NULL DEFAULT NOW()
@@ -114,17 +167,21 @@ CREATE TABLE favoritos (
 
 -- 14. Tabla comentarios
 CREATE TABLE comentarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT  PRIMARY KEY,
   usuario_id INT NOT NULL,
   publicacion_id INT NOT NULL,
   punto_eca_id INT,
   contenido TEXT NOT NULL,
   creado TIMESTAMP NOT NULL DEFAULT NOW()
+  texto TEXT,
+  creado TIMESTAMP NOT NULL DEFAULT NOW()
+    tipo ENUM('publicacion','punto eca'),
+  referencia_id INT NOT NULL,
 );
 
 -- 15. Tabla notificaciones
 CREATE TABLE notificaciones (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT  PRIMARY KEY,
   usuario_id INT NOT NULL,
   tipo_id INT NOT NULL,
   referencia_id INT NOT NULL,
@@ -134,14 +191,14 @@ CREATE TABLE notificaciones (
 
 -- 16. Tabla tipos_notificacion
 CREATE TABLE tipos_notificacion (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   codigo VARCHAR(50) NOT NULL UNIQUE,
   descripcion TEXT
 );
 
 -- 17. Tabla conversaciones
 CREATE TABLE conversaciones (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT  PRIMARY KEY,
   usuario_eca_id INT NOT NULL,
   usuario_ciudadano_id INT NOT NULL,
   iniciado DATETIME NOT NULL
@@ -149,7 +206,7 @@ CREATE TABLE conversaciones (
 
 -- 18. Tabla mensajes
 CREATE TABLE mensajes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   conversacion_id INT NOT NULL,
   remitente_id INT NOT NULL,
   contenido TEXT NOT NULL,
@@ -159,13 +216,14 @@ CREATE TABLE mensajes (
 
 -- 19. Tabla tipos_material
 CREATE TABLE tipos_material (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL UNIQUE
+  categoria ENUM('Plástico','Papel y Cartón','Vidrio','Metal','Orgánico','Electrónico','Otro') NOT NULL
 );
 
 -- 20. Tabla programacion_recoleccion
 CREATE TABLE programacion_recoleccion (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   punto_eca_id INT NOT NULL,
   material_id INT NOT NULL,
   planta_reciclaje_id INT,  
@@ -175,7 +233,7 @@ CREATE TABLE programacion_recoleccion (
 
 -- 21. Tabla plantas_reciclaje 
 CREATE TABLE plantas_reciclaje (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY,
   nombre_entidad VARCHAR(100) NOT NULL,
   nombre_encargado VARCHAR(100),
   telefono VARCHAR(20),
@@ -191,6 +249,62 @@ CREATE TABLE materiales_plantas_reciclaje (
   PRIMARY KEY (planta_id, material_id)
 );
 
+---------------------------------------
+--Se agrega tabla Compras
+--23. Tabla compras
+create table compras(
+  id INT PRIMARY KEY,,
+  inventario_id INT NOT NULL,
+  fecha TIMESTAMP NOT NULL DEFAULT NOW(),
+  kg decimal (6,2),
+  precio_unitario decimal (7,2),
+)
+---------------------------------------
+--------------------------------------
+--Se agrega tabla Salidas 
+--24. Tabla salidas
+create table salidas(
+  id INT PRIMARY KEY
+  inventario_id INT NOT NULL,
+  centros_de_acopio_id INT NOT NULL,
+  fecha TIMESTAMP NOT NULL DEFAULT NOW(),
+  kg decimal (6,2)
+);
+--------------------------------------
+-------------------------------------
+--Se agrega tabla Despachos
+--25. Tabla despachos
+create table despachos(
+  id INT PRIMARY KEY,
+  inventario_id INT NOT NULL,
+  centros_de_acopio_id INT NOT NULL,
+  fecha date NOT NULL DEFAULT NOW(),
+  hora time NOT NULL DEFAULT NOW(),
+  - frecuencia enum('manual', 'semanal', 'quincenal', 'mensual', 'unico') default manual
+);
+-------------------------------------
+---------------------------------------------------------
+--Se agrega tabla centros_de_acopio
+--26. Tabla centros_de_acopio
+create table centros_de_acopio(
+  id INT PRIMARY KEY,
+  nombre varchar(150) NOT NULL,
+  tipo ENUM('Centro de Acopio','Proveedor') not null, 
+  nit varchar(20) UNIQUE,
+  alcance ENUM('Global','ECA'),
+  contacto varchar(20),
+  telefono varchar(20),
+  correo varchar(20),
+  direccion varchar(255),
+  localidad_id INT not null,
+  ciudad_id INT not null,
+  latitud DECIMAL(9,6),
+  longitud DECIMAL(9,6),  
+  estado ENUM('Activo','Inactivo') NOT NULL DEFAULT 'Activo',
+  creado TIMESTAMP NOT NULL DEFAULT NOW(),
+  actualizado TIMESTAMP NOT NULL DEFAULT NOW(),
+);
+------------------------------------------------------------------
 -- 23. Claves foráneas al final
 ALTER TABLE perfiles_ciudadano
   ADD CONSTRAINT fk_perfiles_ciudadano_usuario_id FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
@@ -250,3 +364,25 @@ ALTER TABLE materiales_plantas_reciclaje
   ADD CONSTRAINT fk_materiales_plantas_reciclaje_planta_id FOREIGN KEY (planta_id) REFERENCES plantas_reciclaje(id),
   ADD CONSTRAINT fk_materiales_plantas_reciclaje_material_id FOREIGN KEY (material_id) REFERENCES materiales(id);
 
+ALTER TABLE categorias_publicaciones
+  ADD CONSTRAINT fk_categorias_publicaciones_publicacion_id FOREIGN KEY (publicacion_id) REFERENCES publicaciones(id);
+
+ALTER TABLE votos 
+  ADD CONSTRAINT fk_votos_usurios_id FOREIGN KEY (usuarios_id) REFERENCES usuarios(id);
+
+ALTER TABLE comentarios
+  ADD CONSTRAINT fk_comentarios_usurios_id FOREIGN KEY (usuarios_id) REFERENCES usuarios(id);
+
+ALTER TABLE compras
+  ADD CONSTRAINT fk_comentarios_inventario_id FOREIGN KEY (inventario_id) REFERENCES inventario(id);
+
+ALTER TABLE entradas
+  ADD CONSTRAINT fk_entradas_inventario_id FOREIGN KEY (inventario_id) REFERENCES inventario(id);
+
+ALTER TABLE salidas
+  ADD CONSTRAINT fk_salidas_inventario_id FOREIGN KEY (inventario_id) REFERENCES inventario(id);
+  ADD CONSTRAINT fk_salidas_centro_de_acopio_id FOREIGN KEY (centros_de_acopio_id) REFERENCES centros_de_acopio(id);
+
+ALTER TABLE despachos
+  ADD CONSTRAINT fk_despacho_inventario_id FOREIGN KEY (inventario_id) REFERENCES inventario(id);
+  ADD CONSTRAINT fk_despacho_centro_de_acopio_id FOREIGN KEY (centros_de_acopio_id) REFERENCES centros_de_acopio(id);
