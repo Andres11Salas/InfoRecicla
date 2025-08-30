@@ -183,3 +183,7 @@ ORDER BY nombre;
 # Relacionar materiales aceptados
 
 - Si quieres mostrar/filtrar proveedores por material:
+
+# Usuario de aplicacion
+- Un usuario con todos los privilegios para el manejo de la base de datos desde la aplicacion
+
