@@ -22,7 +22,10 @@ class Controller
             $contenido = ob_get_clean();
             return $contenido;
         } else {
-            return "No existe la vista";
+            ob_start();
+            include "../resource/Errores/404.html";
+            $contenido = ob_get_clean();
+            return $contenido;
         }
     }
 }
