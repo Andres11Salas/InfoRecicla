@@ -9,16 +9,16 @@
 
   # Agregar los campos: 
 
-      - tipo de documento
-      - numero de documento
-      - telefono
-      - recibe notificaciones boolean NOT NULL default true
-      - fecha de nacimiento
-      - direccion
-      - avatar url
-      - nombre de usuario
-      - genero 
-      - localidad
+      - tipo de documento -- listo
+      - numero de documento -- listo
+      - telefono - listo
+      - recibe notificaciones boolean NOT NULL default true -listo
+      - fecha de nacimiento- listo
+      - direccion - listo
+      - avatar url - listo
+      - nombre de usuario -listo
+      - genero -listo
+      - localidad -listo
 
 
   # Crear tablas para normalizar:
@@ -34,12 +34,12 @@
 
   # Agregar los campos: 
 
-      - nit (20)
-      - horario atencion
-      - sitio web
-      - logo url
-      - foto url
-      - mostrar mapa BOOLEAN NOT NULL DEFAULT TRUE
+      - nit (20) -- listo
+      - horario atencion --listo
+      - sitio web --listo
+      - logo url-- listo
+      - foto url-- listo
+      - mostrar mapa BOOLEAN NOT NULL DEFAULT TRUE-- listo
 
 # TABLA PUBLICACIONES
 
@@ -49,62 +49,62 @@
 
       - publicaciones multimedia : donde se guardaran videos imagenes para las publicaciones
 
-                                  - id 
-                                  - publicacion id
-                                  - tipo enum (imagen, video, documento, enlace)
-                                  - url
-                                  - titulo
-                                  - descripcion
+                                  - id -- listo
+                                  - publicacion id-- listo
+                                  - tipo enum (imagen, video, documento, enlace)-- listo
+                                  - url-- listo
+                                  - titulo-- listo
+                                  - descripcion-- listo
 
       - tabla para etiquetas 
 
       - crear la tabla votos con : 
-                                  - tipo enum(publicacion, punto eca)
-                                  - referencia id
-                                  - usuario
-                                  - valor enum('like','dislike')
-                                  - creado - fecha
+                                  - tipo enum(publicacion, punto eca) -- listo
+                                  - referencia id -- listo
+                                  - usuario-- listo
+                                  - valor enum('like','dislike')-- listo
+                                  - creado - fecha-- listo
       - crear la tabla comentarios :
-                                  - tipo enum(publicacion, punto eca)
-                                  - referencia id
-                                  - usuario
-                                  - texto
-                                  - creado
+                                  - tipo enum(publicacion, punto eca) -- listo
+                                  - referencia id-- listo
+                                  - usuario -- listo
+                                  - texto -- listo
+                                  - creado -- listo
 # TABLA MATERIALES
   # Agregar los campos: 
-                        - tipo
-                        - categoria
-                        - imagen url
-                        - precio compra
-                        - precio venta
+                        - tipo -- listo
+                        - categoria -- listo
+                        - imagen url -- listo
+                        - precio compra -- listo
+                        - precio venta -- listo
   # Crear tablas para normalizar:
-                        - tipo / tipo de material
+                        - tipo / tipo de material --- solo con categoria se estaria bien
                         - categoria / del material ej: pet - plastico - etc
 
 # TABLA INVENTARIO
   # Agregar los campos: 
-                        - stokc actual
-                        - umbral alerta 
-                        - umbral critico
+                        - stokc actual -- listo
+                        - umbral alerta -- listo
+                        - umbral critico -- listo
   # Crear tablas para normalizar:
-                        - tabla compras : - id
-                                          - inventario id
-                                          - fecha
-                                          - kg
-                                          - precio unit
+                        - tabla compras : - id -- listo
+                                          - inventario id -- listo
+                                          - fecha -- listo
+                                          - kg -- listo
+                                          - precio unit -- listo
                         
-                        - tabla salidas : - id
-                                          - inventario id
-                                          - fecha
-                                          - kg
-                                          - centro-acopio id
+                        - tabla salidas : - id -- listo
+                                          - inventario id -- listo
+                                          - fecha -- listo
+                                          - kg -- listo
+                                          - centro-acopio id -- listo
                         - tabla despachos (donde se guardara los dias de despacho de material) :
-                                          - id 
-                                          - inventario id
-                                          - centro-acopio id
-                                          - fecha
-                                          - hora
-                                          - frecuencia enum(manual, semanal, quincenal, mensual, unico,) default manual
+                                          - id -- listo
+                                          - inventario id-- listo
+                                          - centro-acopio id-- listo
+                                          - fecha -- listo
+                                          - hora-- listo
+                                          - frecuencia enum(manual, semanal, quincenal, mensual, unico,) default manual -- listo
                                         
 # TABLA PROVEEDORES
 
